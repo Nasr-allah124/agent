@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@theme {
+  --color-ledger: #0F2A44;
+  --color-ledgerline: #1C3F5E;
+  --color-parchment: #F3EAD3;
+  --color-parchmentline: #D9CBA3;
+  --color-ink: #1B2430;
+  --color-brass: #C9A227;
+  --color-stamp: #B23A2E;
+  --color-moss: #5C7188;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+/* body {
+  font-family: var(--font-body);
+}
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@theme {
+  --color-ledger: #16241F;
+  --color-ledgerline: #2A3A32;
+  --color-parchment: #F3EAD3;
+  --color-parchmentline: #D9CBA3;
+  --color-ink: #211A12;
+  --color-brass: #C9A227;
+  --color-stamp: #B23A2E;
+  --color-moss: #6B7264;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+body {
+  font-family: var(--font-body);
+} */
