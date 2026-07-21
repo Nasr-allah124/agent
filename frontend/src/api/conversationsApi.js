@@ -1,42 +1,36 @@
-const API_BASE = "http://localhost:8020"; 
+import { apiFetch } from "./http";
 
-export async function creerConversation(service) {
-  const response = await fetch(`${API_BASE}/conversations`, {
+export function creerConversation(service) {
+  return apiFetch("/conversations", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ service }),
+    body: { service },
+    messageErreur: "Erreur lors de la création de la conversation",
   });
-  if (!response.ok) throw new Error("Erreur lors de la création de la conversation");
-  return response.json();
 }
 
-export async function listerConversations(service) {
-  const response = await fetch(`${API_BASE}/conversations?service=${service}`);
-  if (!response.ok) throw new Error("Erreur lors du chargement des conversations");
-  return response.json();
+export function listerConversations(service) {
+  return apiFetch(`/conversations?service=${service}`, {
+    messageErreur: "Erreur lors du chargement des conversations",
+  });
 }
 
-export async function obtenirConversation(id) {
-  const response = await fetch(`${API_BASE}/conversations/${id}`);
-  if (!response.ok) throw new Error("Conversation introuvable");
-  return response.json();
+export function obtenirConversation(id) {
+  return apiFetch(`/conversations/${id}`, {
+    messageErreur: "Conversation introuvable",
+  });
 }
 
-export async function supprimerConversation(id) {
-  const response = await fetch(`${API_BASE}/conversations/${id}`, { method: "DELETE" });
-  if (!response.ok) throw new Error("Erreur lors de la suppression");
-  return response.json();
+export function supprimerConversation(id) {
+  return apiFetch(`/conversations/${id}`, {
+    method: "DELETE",
+    messageErreur: "Erreur lors de la suppression",
+  });
 }
 
-export async function envoyerMessage(id, question) {
-  const response = await fetch(`${API_BASE}/conversations/${id}/message`, {
+export function envoyerMessage(id, question) {
+  return apiFetch(`/conversations/${id}/message`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: { question },
+    messageErreur: "Erreur lors de l'envoi du message",
   });
-  if (!response.ok) {
-    const erreur = await response.json();
-    throw new Error(erreur.detail || "Erreur lors de l'envoi du message");
-  }
-  return response.json();
 }

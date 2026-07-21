@@ -1,5 +1,6 @@
+import os
 import re
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader
 from langchain_core.documents import Document
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -34,10 +35,20 @@ def nettoyer_texte(texte):
     return texte
 
 
-def chunker_cv_llm(chemin_pdf):
-    loader = PyPDFLoader(chemin_pdf)
+def _charger_texte(chemin_fichier: str) -> str:
+    extension = os.path.splitext(chemin_fichier)[1].lower()
+    if extension == ".pdf":
+        loader = PyPDFLoader(chemin_fichier)
+    elif extension == ".docx":
+        loader = Docx2txtLoader(chemin_fichier)
+    else:
+        raise ValueError(f"Format de fichier non supporté : {extension}")
     documents = loader.load()
-    texte_complet = "\n".join([doc.page_content for doc in documents])
+    return "\n".join([doc.page_content for doc in documents])
+
+
+def chunker_cv_llm(chemin_fichier):
+    texte_complet = _charger_texte(chemin_fichier)
     texte_complet = nettoyer_texte(texte_complet)
 
     resultat = get_chunking_chain().invoke({"texte_cv": texte_complet})

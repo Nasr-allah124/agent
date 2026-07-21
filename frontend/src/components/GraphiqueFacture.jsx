@@ -1,28 +1,31 @@
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const COULEURS = ["#C9A227", "#B23A2E", "#5C7188", "#1C3F5E", "#8A6D3B"];
+const COULEURS = ["#7c3aed", "var(--secondary)", "var(--success)", "var(--warning)", "var(--danger)"];
 
 export default function GraphiqueFacture({ graphique }) {
   if (!graphique || !graphique.donnees?.length) return null;
-
   const { type, titre, donnees } = graphique;
 
   return (
-    <div className="bg-white/60 border border-parchmentline rounded-xl p-4 mt-2">
-      {titre && (
-        <p className="font-mono text-[11px] uppercase tracking-widest text-moss mb-3">{titre}</p>
-      )}
-      <ResponsiveContainer width="100%" height={220}>
+    <div className="bg-card border border-border rounded-xl p-4">
+      {titre && <p className="text-xs font-700 text-muted-foreground uppercase tracking-wide mb-3">{titre}</p>}
+      <ResponsiveContainer width="100%" height={200}>
         {type === "line" ? (
           <LineChart data={donnees}>
-            <XAxis dataKey="categorie" stroke="#5C7188" fontSize={11} />
-            <YAxis stroke="#5C7188" fontSize={11} />
+            <defs>
+              <linearGradient id="ligneDegradee" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#7c3aed" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="categorie" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+            <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
             <Tooltip />
-            <Line type="monotone" dataKey="valeur" stroke="#B23A2E" strokeWidth={2} />
+            <Line type="monotone" dataKey="valeur" stroke="url(#ligneDegradee)" strokeWidth={2} />
           </LineChart>
         ) : type === "pie" ? (
           <PieChart>
-            <Pie data={donnees} dataKey="valeur" nameKey="categorie" outerRadius={80} label>
+            <Pie data={donnees} dataKey="valeur" nameKey="categorie" outerRadius={70} label>
               {donnees.map((_, i) => (
                 <Cell key={i} fill={COULEURS[i % COULEURS.length]} />
               ))}
@@ -31,10 +34,16 @@ export default function GraphiqueFacture({ graphique }) {
           </PieChart>
         ) : (
           <BarChart data={donnees}>
-            <XAxis dataKey="categorie" stroke="#5C7188" fontSize={11} />
-            <YAxis stroke="#5C7188" fontSize={11} />
+            <defs>
+              <linearGradient id="barreDegradee" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7c3aed" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="categorie" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+            <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
             <Tooltip />
-            <Bar dataKey="valeur" fill="#C9A227" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="valeur" fill="url(#barreDegradee)" radius={[4, 4, 0, 0]} />
           </BarChart>
         )}
       </ResponsiveContainer>

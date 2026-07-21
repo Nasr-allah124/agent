@@ -62,12 +62,13 @@ def generer_requete(question: str, historique: str = "") -> RequeteSQL | None:
         return None
 
 
-def executer_requete(requete_sql: str) -> list[dict]:
-    """Exécute une requête déjà validée comme SELECT-only."""
+def executer_requete(requete_sql: str, user_id: str) -> list[dict]:
+    """Exécute une requête déjà validée comme SELECT-only, strictement isolée par utilisateur."""
+    requete_isolee = f"WITH factures AS (SELECT * FROM main.factures WHERE user_id = ?) {requete_sql}"
     conn = sqlite3.connect(CHEMIN_DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute(requete_sql)
+    cursor.execute(requete_isolee, (user_id,))
     lignes = cursor.fetchall()
     conn.close()
     return [dict(ligne) for ligne in lignes]
@@ -93,15 +94,34 @@ def reformuler_reponse(question: str, resultats: list[dict]) -> str:
     return str(reponse.content)
 
 
-def poser_question(question: str, historique: str = "") -> dict:
+def poser_question(question: str, user_id: str, historique: str = "") -> dict:
     requete = generer_requete(question, historique)
     if requete is None:
-        return {"succes": False, "erreur": "Impossible de générer une requête pour cette question"}
+        return {
+            "succes": True,
+            "reponse": (
+                "Je n'ai pas réussi à comprendre votre question sous cette forme. "
+                "Pouvez-vous préciser, par exemple un nom de client, une période, ou un montant ?"
+            ),
+            "requete_utilisee": None,
+            "resultats_bruts": [],
+            "graphique": None,
+        }
 
     try:
-        resultats = executer_requete(requete.requete_select)
-    except sqlite3.Error as e:
-        return {"succes": False, "erreur": f"Erreur SQL : {e}"}
+        resultats = executer_requete(requete.requete_select, user_id)
+    except sqlite3.Error:
+        return {
+            "succes": True,
+            "reponse": (
+                "Je n'ai pas cette information disponible dans les données actuelles de vos factures "
+                "(par exemple, le statut de paiement n'est pas encore suivi dans le système). "
+                "Voulez-vous que je vous montre plutôt le total, ou la liste par client ?"
+            ),
+            "requete_utilisee": requete.requete_select,
+            "resultats_bruts": [],
+            "graphique": None,
+        }
 
     reponse = reformuler_reponse(question, resultats)
 

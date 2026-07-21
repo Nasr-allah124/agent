@@ -1,0 +1,503 @@
+{
+  "brand": "Daisy Consulting Agents",
+  "nav": {
+    "features": "Fonctionnalités",
+    "services": "Services",
+    "how": "Comment ça marche",
+    "resources": "Ressources",
+    "demo": "Démo",
+    "about": "À propos"
+  },
+  "Login": "Connexion",
+  "start": "Commencer",
+  "hero": {
+    "badgeAi": "IA",
+    "badgeText": "Plateforme intelligente d'analyse de documents",
+    "titleLine1": "Comprenez vos",
+    "titleDocuments": "Documents",
+    "titleWith": "avec",
+    "titlePoweredByAi": "Propulsé par l'IA.",
+    "words": {
+      "analyze": "Analysez.",
+      "understand": "Comprenez.",
+      "discover": "Découvrez.",
+      "automate": "Automatisez.",
+      "explore": "Explorez."
+    },
+    "description1": "Importez tout document professionnel — CV, factures, PDF, Word, Excel — et laissez",
+    "description2": "extraire des informations, répondre à vos questions et transformer votre travail.",
+    "check1": "Découvrez l'analyse de documents propulsée par l'IA, instantanément.",
+    "check2": "Utilisé par des professionnels. Conçu pour la productivité.",
+    "stat1Value": "Plus rapide",
+    "stat1Label": "Traitement des documents",
+    "stat2Value": "Intelligent",
+    "stat2Label": "Analyse IA",
+    "stat3Value": "Précis",
+    "stat3Label": "Résultats"
+  },
+  "dashboard": {
+    "uploadedDocs": "Documents importés",
+    "live": "En direct",
+    "aiAccuracy": "Précision IA",
+    "reliable": "Fiable",
+    "docsCount": "12 documents",
+    "uploaded": "Importés",
+    "aiProcessing": "Traitement IA",
+    "parsing": "Analyse",
+    "analyzing": "Traitement",
+    "insights": "Résultats",
+    "aiAssistant": "Assistant IA",
+    "question": "Quel est le total des factures impayées ?",
+    "answer": "3 factures impayées trouvées, totalisant 12 450 $. La plus ancienne date de 45 jours.",
+    "docs": {
+      "cv": {
+        "name": "CV_Sarah.pdf",
+        "type": "CV"
+      },
+      "invoice": {
+        "name": "Facture_2025_T4.pdf",
+        "type": "Facture"
+      },
+      "excel": {
+        "name": "Rapport_Ventes.xlsx",
+        "type": "Excel"
+      },
+      "word": {
+        "name": "Contrat_NDA.docx",
+        "type": "Word"
+      }
+    }
+  },
+  "services": {
+    "badge": "Services IA",
+    "titleLine1": "Choisissez votre",
+    "titleHighlight": "service IA",
+    "subtitle1": "Chaque service est un",
+    "subtitleHighlight": "espace de travail IA",
+    "subtitle2": "spécialisé pour un type de document précis. Choisissez celui qui correspond à votre besoin.",
+    "formatsLabel": "Formats pris en charge",
+    "openService": "Ouvrir le service",
+    "items": {
+      "resume": {
+        "badge": "RH & Recrutement",
+        "title": "Analyse de CV par IA",
+        "subtitle": "Intelligence des candidatures et des CV",
+        "description": "Analysez les CV intelligemment, extrayez les compétences, la formation, l'expérience, les certifications et les langues. Générez des résumés, comparez les candidats et posez des questions sur les CV importés.",
+        "features": {
+          "0": "Extraction des compétences et expériences",
+          "1": "Notation des candidats",
+          "2": "Résumés générés par IA",
+          "3": "Questions-réponses en langage naturel",
+          "4": "Comparaison de candidats"
+        }
+      },
+      "invoice": {
+        "badge": "Finance & Comptabilité",
+        "title": "Analyse de factures par IA",
+        "subtitle": "Traitement intelligent des documents financiers",
+        "description": "Analysez les factures automatiquement, extrayez fournisseurs, produits, taxes, totaux et statut de paiement. Détectez les anomalies, générez des résumés et posez des questions sur les factures importées.",
+        "features": {
+          "0": "Extraction des totaux et taxes",
+          "1": "Données fournisseurs et produits",
+          "2": "Suivi du statut de paiement",
+          "3": "Détection d'anomalies",
+          "4": "Résumés financiers"
+        }
+      }
+    }
+  },
+  "features": {
+    "badge": "Fonctionnalités",
+    "titleLine1": "Pensé pour",
+    "titleHighlight": "votre productivité",
+    "subtitle": "Une plateforme complète pour analyser vos CV et vos factures, avec la puissance de l'IA à chaque étape.",
+    "items": {
+      "search": {
+        "title": "Recherche sémantique",
+        "description": "Retrouvez instantanément l'information dans vos documents grâce à une recherche vectorielle intelligente, pas seulement des mots-clés."
+      },
+      "security": {
+        "title": "Données sécurisées",
+        "description": "Vos documents et vos données restent protégés, avec un stockage chiffré et un accès contrôlé à chaque instant."
+      },
+      "formats": {
+        "title": "Multi-formats",
+        "description": "Importez vos CV et factures en PDF, Word, Excel ou CSV — la plateforme s'adapte au format de votre document."
+      },
+      "chat": {
+        "title": "Questions en langage naturel",
+        "description": "Posez vos questions directement à vos documents, comme si vous discutiez avec un collègue expert."
+      },
+      "speed": {
+        "title": "Traitement rapide",
+        "description": "Analysez des dizaines de documents en quelques secondes grâce à des modèles IA optimisés pour la performance."
+      },
+      "history": {
+        "title": "Historique des conversations",
+        "description": "Retrouvez toutes vos analyses passées et reprenez une conversation là où vous l'aviez laissée."
+      }
+    }
+  },
+  "howItWorks": {
+    "badge": "Comment ça marche",
+    "titleLine1": "Un processus",
+    "titleHighlight": "simple et intelligent",
+    "subtitle": "De l'importation du document à la conversation avec l'IA, voici comment notre plateforme transforme vos CV et factures en informations exploitables.",
+    "stepLabel": "Étape",
+    "steps": {
+      "upload": {
+        "title": "Importez le document",
+        "description": "Déposez votre CV ou votre facture au format PDF, Word, Excel ou CSV directement sur la plateforme."
+      },
+      "vectorize": {
+        "title": "Extraction et vectorisation",
+        "description": "Le contenu est extrait puis converti en vecteurs, stockés dans une base vectorielle pour une recherche intelligente."
+      },
+      "analyze": {
+        "title": "Analyse par l'agent IA",
+        "description": "Notre agent IA analyse le document : compétences et expérience pour un CV, montants et taxes pour une facture."
+      },
+      "chat": {
+        "title": "Résultats et conversation",
+        "description": "Recevez un résumé structuré et posez vos questions en langage naturel, avec l'historique de vos échanges sauvegardé."
+      }
+    }
+  },
+  "faq": {
+    "titleLine1": "Questions",
+    "titleHighlight": "Fréquentes",
+    "subtitle1": "Tout ce qu'il faut savoir sur",
+    "subtitleHighlight": "Daisy Consulting Agents",
+    "items": {
+      "formats": {
+        "q": "Quels formats de documents sont pris en charge ?",
+        "a": "La plateforme accepte les fichiers PDF, Word (.docx), Excel (.xlsx), CSV et images (PNG, JPG). Vous pouvez importer un CV ou une facture individuellement, ou plusieurs documents à la fois."
+      },
+      "documentTypes": {
+        "q": "Quels types de documents puis-je analyser ?",
+        "a": "Deux agents spécialisés sont disponibles : l'agent CV, pour analyser et comparer des candidatures, et l'agent Facture, pour extraire montants, taxes et statuts de paiement des documents financiers."
+      },
+      "privacy": {
+        "q": "Mes données sont-elles sécurisées et privées ?",
+        "a": "Oui. Vos documents sont stockés de manière sécurisée et ne sont jamais partagés avec des tiers. Vous gardez le contrôle total de vos données à tout moment."
+      },
+      "chat": {
+        "q": "Comment fonctionne la conversation avec l'IA ?",
+        "a": "Une fois votre document importé, vous pouvez poser des questions en langage naturel. L'agent IA lit et comprend le contenu grâce à une recherche vectorielle, puis répond de façon contextuelle : résumés, extraction de données précises, ou comparaisons."
+      },
+      "compare": {
+        "q": "Puis-je comparer plusieurs documents ?",
+        "a": "Oui. Vous pouvez comparer plusieurs CV entre eux pour évaluer des candidats, ou plusieurs factures pour repérer des anomalies. L'IA met en évidence les différences et similitudes."
+      },
+      "accuracy": {
+        "q": "Quelle est la précision de l'extraction IA ?",
+        "a": "La plateforme s'appuie sur les modèles Gemini associés à une base vectorielle ChromaDB, garantissant une extraction fiable des compétences, montants et informations clés. Vous pouvez toujours vérifier les données extraites dans les résultats."
+      },
+      "export": {
+        "q": "Puis-je exporter les résultats d'analyse ?",
+        "a": "Oui. Les résumés IA et données extraites peuvent être exportés, et tout l'historique de vos conversations et analyses reste accessible à tout moment."
+      }
+    }
+  },
+  "about": {
+    "badge": "À propos",
+    "titleLine1": "Une plateforme née de",
+    "titleHighlight": "l'expertise Daisy Consulting",
+    "paragraph1": "Daisy Consulting Agents est né d'un constat simple : trier des CV ou traiter des factures à la main prend du temps précieux, que ce temps devrait être consacré à des décisions, pas à de la saisie.",
+    "paragraph2": "Nous avons conçu deux agents",
+    "paragraph2Highlight": "spécialisés et autonomes",
+    "paragraph3": "qui lisent, comprennent et répondent à vos questions sur vos documents, comme le ferait un collègue expérimenté.",
+    "stats": {
+      "agents": {
+        "value": "2 agents",
+        "label": "CV & Factures"
+      },
+      "formats": {
+        "value": "4 formats",
+        "label": "PDF, Word, Excel, CSV"
+      },
+      "accuracy": {
+        "value": "IA de pointe",
+        "label": "Modèles Gemini"
+      },
+      "focus": {
+        "value": "100% dédié",
+        "label": "RH & Finance"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connectez-vous à votre compte",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "createOne": "Créez-en un gratuitement",
+      "continueGoogle": "Continuer avec Google",
+      "continueMicrosoft": "Continuer avec Microsoft",
+      "orContinueWithEmail": "ou continuez avec votre email",
+      "emailLabel": "Email professionnel",
+      "emailPlaceholder": "vous@entreprise.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Mot de passe oublié ?",
+      "rememberMe": "Se souvenir de moi pendant 30 jours",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "errors": {
+        "emailRequired": "L'email est requis",
+        "emailInvalid": "Entrez un email valide",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordMinLength": "6 caractères minimum",
+        "genericError": "Une erreur est survenue, réessayez."
+      }
+    },
+    "signup": {
+      "title": "Créez votre compte",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Connectez-vous",
+      "google": "Google",
+      "microsoft": "Microsoft",
+      "linkedin": "LinkedIn",
+      "orWithEmail": "ou avec votre email",
+      "firstNameLabel": "Prénom",
+      "firstNamePlaceholder": "Jean",
+      "lastNameLabel": "Nom",
+      "lastNamePlaceholder": "Dupont",
+      "emailLabel": "Email professionnel",
+      "emailPlaceholder": "vous@entreprise.com",
+      "companyLabel": "Entreprise",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "roleLabel": "Fonction",
+      "rolePlaceholder": "Sélectionnez votre fonction",
+      "roles": {
+        "hrManager": "Responsable RH",
+        "talentAcquisition": "Chargé de recrutement",
+        "recruiter": "Recruteur",
+        "hrDirector": "Directeur RH",
+        "founder": "Fondateur",
+        "other": "Autre"
+      },
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "8 caractères minimum",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Ressaisissez le mot de passe",
+      "agreeTerms": "J'accepte les",
+      "termsOfService": "conditions d'utilisation",
+      "and": "et la",
+      "privacyPolicy": "politique de confidentialité",
+      "submitting": "Création en cours...",
+      "submit": "Créer mon compte",
+      "successTitle": "Compte créé avec succès !",
+      "successSubtitle": "Vous pouvez maintenant vous connecter avec vos identifiants.",
+      "goToSignIn": "Aller à la connexion",
+      "errors": {
+        "required": "Ce champ est requis",
+        "emailRequired": "L'email est requis",
+        "emailInvalid": "Entrez un email valide",
+        "companyRequired": "L'entreprise est requise",
+        "roleRequired": "Sélectionnez votre fonction",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordMinLength": "8 caractères minimum",
+        "confirmRequired": "Confirmez le mot de passe",
+        "passwordsMismatch": "Les mots de passe ne correspondent pas",
+        "termsRequired": "Vous devez accepter les conditions",
+        "genericError": "Une erreur est survenue, réessayez."
+      }
+    },
+    "illustration": {
+      "stats": {
+        "matchScore": "Précision IA",
+        "cvsAnalyzed": "Agents disponibles",
+        "companies": "Formats supportés",
+        "fasterHiring": "Plus rapide"
+      },
+      "loginTitle": "Bon retour parmi nous.",
+      "loginSubtitle": "Vos agents IA pour les CV et les factures vous attendent.",
+      "signupTitle": "Rejoignez Daisy Consulting Agents.",
+      "signupSubtitle": "Créez votre compte et automatisez l'analyse de vos CV et factures.",
+      "quote": "Daisy Consulting Agents a divisé par deux le temps passé sur le tri de CV et l'analyse de factures.",
+      "quoteAuthor": "— Équipe Daisy Consulting"
+    }
+  },
+  "verifyEmail": {
+    "title": "Vérifiez votre email",
+    "subtitle": "Un code à 6 chiffres a été envoyé à",
+    "verify": "Vérifier",
+    "verifying": "Vérification...",
+    "resendCode": "Renvoyer le code",
+    "resending": "Envoi en cours...",
+    "incompleteCode": "Veuillez saisir les 6 chiffres du code.",
+    "genericError": "Une erreur est survenue.",
+    "successTitle": "Email vérifié !",
+    "successSubtitle": "Votre compte est maintenant actif.",
+    "goToLogin": "Se connecter"
+  },
+  "Dashboard": {
+    "logout": "Déconnexion",
+    "welcome": "Bonjour {{name}}, bienvenue.",
+    "chooseAgent": "Quel agent souhaitez-vous utiliser aujourd'hui ?",
+    "openAgent": "Ouvrir l'agent",
+    "agents": {
+      "resume": {
+        "badge": "Assistant IA",
+        "title": "Analyse de CV",
+        "subtitle": "Optimisez votre CV",
+        "description": "Analysez votre CV grâce à l'IA et obtenez des recommandations personnalisées.",
+        "features": [
+          "Analyse ATS",
+          "Suggestions intelligentes",
+          "Détection des compétences",
+          "Score du CV",
+          "Export PDF"
+        ]
+      },
+      "invoice": {
+        "badge": "Assistant IA",
+        "title": "Analyse de factures",
+        "subtitle": "Extraction automatique",
+        "description": "Importez vos factures et laissez l'IA extraire et analyser les données.",
+        "features": [
+          "OCR intelligent",
+          "Extraction automatique",
+          "Export Excel",
+          "Détection d'erreurs",
+          "Statistiques"
+        ]
+      }
+    }
+  },
+  "Auth": {
+    "signup": {
+      "backToHome": "Retour à l'accueil"
+    }
+  },
+  "common": {
+    "language": "Langue",
+    "toggleTheme": "Changer le thème"
+  },
+  "invoiceWorkspace": {
+    "back": "Retour",
+    "headerTitle": "Assistant Factures IA",
+    "headerSubtitle": "Analyse et suivi automatisé de vos factures",
+    "aiActive": "IA active",
+    "actions": "Actions",
+    "document": "Document",
+    "invoices": "Factures",
+    "totalTTC": "Total TTC",
+    "importedOn": "Importé le",
+    "size": "Taille",
+    "type": "Type",
+    "signIn": "Se connecter",
+    "uploadedInvoices": "Factures importées",
+    "files": "fichiers",
+    "filtersTitle": "Filtres",
+    "filters": {
+      "all": "Toutes",
+      "unpaid": "Impayées",
+      "overdue": "En retard",
+      "anomalies": "Anomalies",
+      "paid": "Payées"
+    },
+    "chatTitle": "Assistant IA",
+    "chatSubtitle": "factures analysées",
+    "export": "Exporter",
+    "customChartTitle": "Afficher/masquer le graphique",
+    "aiInitialMessage": "Bonjour ! Je suis votre assistant IA pour l'analyse de factures. Posez-moi une question sur vos documents.",
+    "aiResponseMessage": "Voici ce que j'ai trouvé dans vos factures. **Souhaitez-vous plus de détails ?**",
+    "suggestedQuestions": "Questions suggérées",
+    "questions": {
+      "totalUnpaid": "Quel est le total des factures impayées ?",
+      "compareTwo": "Compare deux factures",
+      "showThisMonth": "Montre les factures de ce mois",
+      "whichAnomalies": "Quelles sont les anomalies détectées ?",
+      "totalTax": "Quel est le total des taxes ?",
+      "listOverdue": "Liste les factures en retard"
+    },
+    "inputPlaceholder": "Posez une question sur vos factures...",
+    "analysisResultsTitle": "Résultats de l'analyse",
+    "cashflowTitle": "Projection de trésorerie",
+    "cashflowSubtitle": "Solde prévisionnel sur les prochaines semaines",
+    "cashflowAlert": "Solde négatif prévu",
+    "cashflowLegend": "Solde",
+    "libraryTitle": "Bibliothèque de documents",
+    "searchDocuments": "Rechercher un document...",
+    "stats": {
+      "totalAmount": "Montant total",
+      "unpaid": "Impayé",
+      "anomalies": "Anomalies",
+      "processed": "Traitées",
+      "registeredInvoices": "Factures enregistrées",
+      "importedFiles": "Fichiers importés"
+    }
+  },
+  "resumeWorkspace": {
+    "back": "Retour",
+    "graphiquesEpingles": "Graphiques épinglés",
+    "headerTitle": "Assistant CV IA",
+    "candidate": "Candidat",
+    "loading": "Chargement…",
+    "noImportedCV": "Aucun CV importé.",
+    "type": "Type",
+    "size": "Taille",
+    "importedOn": "Importé le",
+    "documents": "documents",
+    "noCandidate": "—",
+    "headerSubtitle": "Analyse et recherche de candidats",
+    "aiActive": "IA active",
+    "signIn": "Se connecter",
+    "uploadTitle": "Déposez vos CV ici",
+    "uploadSubtitle": "PDF, DOCX jusqu'à 10 Mo",
+    "browseFiles": "Parcourir les fichiers",
+    "uploadedResumes": "CV importés",
+    "files": "fichiers",
+    "filtersTitle": "Filtres",
+    "filters": {
+      "all": "Tous",
+      "analyzed": "Analysés",
+      "processing": "En traitement",
+      "starred": "Favoris"
+    },
+    "chatTitle": "Assistant de recrutement",
+    "chatSubtitle": "candidats disponibles",
+    "skillSearchTitle": "Recherche par compétence",
+    "skillSearchPlaceholder": "Rechercher une compétence (ex: React, Python)...",
+    "skillSearchEmptyTitle": "Recherchez par compétence",
+    "skillSearchEmptySubtitle": "Trouvez rapidement les candidats qui maîtrisent une technologie précise.",
+    "skillSearchNoResultsTitle": "Aucun résultat",
+    "skillSearchNoResults": "Aucun candidat ne correspond à",
+    "skillSearchResultsCount": "candidat(s) trouvé(s) pour",
+    "export": "Exporter",
+    "suggestedQuestions": "Questions suggérées",
+    "inputPlaceholder": "Posez une question sur les candidats...",
+    "analysisResultsTitle": "Résultats de l'analyse",
+    "stats": {
+      "analyzed": "CV analysés",
+      "avgScore": "Score moyen",
+      "topMatch": "Meilleur candidat"
+    },
+    "trendTitle": "Tendance des meilleurs candidats",
+    "trendSubtitle": "Évolution sur les 6 dernières semaines",
+    "trendLegend": "Top candidats"
+  },
+  "forgotPassword": {
+  "title": "Mot de passe oublié",
+  "subtitle": "Entrez votre email, nous vous enverrons un code de réinitialisation.",
+  "emailLabel": "Adresse email",
+  "send": "Envoyer le code",
+  "sending": "Envoi en cours…",
+  "backToLogin": "Retour à la connexion",
+  "sentTitle": "Email envoyé",
+  "sentSubtitle": "Si un compte existe avec cet email, vous allez recevoir un code de réinitialisation.",
+  "enterCode": "Saisir le code"
+},
+"resetPassword": {
+  "title": "Réinitialiser le mot de passe",
+  "subtitle": "Un code a été envoyé à",
+  "newPasswordLabel": "Nouveau mot de passe",
+  "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+  "reset": "Réinitialiser le mot de passe",
+  "resetting": "Réinitialisation en cours…",
+  "successTitle": "Mot de passe réinitialisé",
+  "successSubtitle": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+  "goToLogin": "Aller à la connexion"
+}
+}

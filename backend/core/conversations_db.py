@@ -12,6 +12,7 @@ def creer_tables():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS conversations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
             service TEXT NOT NULL,
             titre TEXT NOT NULL DEFAULT 'Nouvelle conversation',
             resume_memoire TEXT NOT NULL DEFAULT '',
@@ -38,13 +39,13 @@ def _maintenant():
     return datetime.now(timezone.utc).isoformat()
 
 
-def creer_conversation(service: str) -> dict:
+def creer_conversation(service: str, user_id: str) -> dict:
     conn = sqlite3.connect(CHEMIN_DB)
     cursor = conn.cursor()
     maintenant = _maintenant()
     cursor.execute(
-        "INSERT INTO conversations (service, titre, resume_memoire, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-        (service, "Nouvelle conversation", "", maintenant, maintenant),
+        "INSERT INTO conversations (user_id, service, titre, resume_memoire, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+        (user_id, service, "Nouvelle conversation", "", maintenant, maintenant),
     )
     conversation_id = cursor.lastrowid
     conn.commit()
@@ -52,24 +53,24 @@ def creer_conversation(service: str) -> dict:
     return {"id": conversation_id, "service": service, "titre": "Nouvelle conversation", "updated_at": maintenant}
 
 
-def lister_conversations(service: str) -> list[dict]:
+def lister_conversations(service: str, user_id: str) -> list[dict]:
     conn = sqlite3.connect(CHEMIN_DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT id, titre, updated_at FROM conversations WHERE service = ? ORDER BY updated_at DESC",
-        (service,),
+        "SELECT id, titre, updated_at FROM conversations WHERE service = ? AND user_id = ? ORDER BY updated_at DESC",
+        (service, user_id),
     )
     lignes = cursor.fetchall()
     conn.close()
     return [dict(l) for l in lignes]
 
 
-def obtenir_conversation(conversation_id: int) -> dict | None:
+def obtenir_conversation(conversation_id: int, user_id: str) -> dict | None:
     conn = sqlite3.connect(CHEMIN_DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM conversations WHERE id = ?", (conversation_id,))
+    cursor.execute("SELECT * FROM conversations WHERE id = ? AND user_id = ?", (conversation_id, user_id))
     conv = cursor.fetchone()
     if conv is None:
         conn.close()
@@ -89,10 +90,13 @@ def obtenir_conversation(conversation_id: int) -> dict | None:
     return conv_dict
 
 
-def obtenir_resume(conversation_id: int) -> str:
+def obtenir_resume(conversation_id: int, user_id: str) -> str:
     conn = sqlite3.connect(CHEMIN_DB)
     cursor = conn.cursor()
-    cursor.execute("SELECT resume_memoire FROM conversations WHERE id = ?", (conversation_id,))
+    cursor.execute(
+        "SELECT resume_memoire FROM conversations WHERE id = ? AND user_id = ?",
+        (conversation_id, user_id),
+    )
     ligne = cursor.fetchone()
     conn.close()
     return ligne[0] if ligne and ligne[0] else "Aucun échange précédent."
@@ -134,11 +138,11 @@ def renommer_conversation_si_premier_message(conversation_id: int, premier_messa
     conn.close()
 
 
-def supprimer_conversation(conversation_id: int) -> bool:
+def supprimer_conversation(conversation_id: int, user_id: str) -> bool:
     conn = sqlite3.connect(CHEMIN_DB)
     cursor = conn.cursor()
     cursor.execute("DELETE FROM messages WHERE conversation_id = ?", (conversation_id,))
-    cursor.execute("DELETE FROM conversations WHERE id = ?", (conversation_id,))
+    cursor.execute("DELETE FROM conversations WHERE id = ? AND user_id = ?", (conversation_id, user_id))
     conn.commit()
     supprimee = cursor.rowcount > 0
     conn.close()

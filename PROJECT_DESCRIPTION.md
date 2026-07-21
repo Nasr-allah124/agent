@@ -3,7 +3,7 @@ Archive — Description complète du projet
 
 Résumé
 ------
-"Archive" est une application web (frontend React + backend FastAPI) qui fournit une interface de type "tiroir d'archives" pour classer, indexer, rechercher et interroger des documents (initialement CVs, puis factures). L'interface s'appuie sur un agent IA côté backend pour analyser le contenu des PDF, extraire des sections/compétences, construire un index vectoriel et répondre aux requêtes en langage naturel.
+"Archive" est une application web (frontend Next.js + backend FastAPI) qui fournit une interface de type "tiroir d'archives" pour classer, indexer, rechercher et interroger des documents (initialement CVs, puis factures). L'interface s'appuie sur un agent IA côté backend pour analyser le contenu des PDF, extraire des sections/compétences, construire un index vectoriel et répondre aux requêtes en langage naturel.
 
 Objectifs
 ---------
@@ -23,10 +23,11 @@ Principales fonctionnalités
 
 Architecture technique
 ----------------------
-- Frontend : React + Vite + Tailwind CSS (v4). Structure principale dans `frontend/src`.
-  - Pages : `ServiceSelector.jsx`, `CvPage.jsx`, `FacturePage.jsx`.
-  - Composants : `Header.jsx`, `DossierCard.jsx`, `Logo.jsx`, etc.
-  - API client : `src/api/cvApi.js` centralise les appels vers FastAPI.
+- Frontend : Next.js + React + TypeScript + Tailwind CSS. Structure principale dans `frontend/src/app`.
+  - Pages : `landing-page`, `dashboard`, `sign-up-login-screen`, `workspace`.
+  - Composants : `src/components/ui`, composants de page et widgets métier.
+  - Styles : `src/styles` pour le thème global et le design system.
+  - Le point d'entrée `src/app/page.tsx` redirige vers la landing page.
 - Backend : FastAPI (dossier `backend/`), expose endpoints pour upload, listing, recherche et chat.
   - Stockage vectoriel : Chroma (dossier `chroma_data_cv/` avec fichier SQLite), géré via `core/vector_store.py`.
   - Logique LLM / agent : `core/llm.py`, retriever : `core/retriever.py`.
@@ -42,17 +43,17 @@ Fichiers et structure clé
 -------------------------
 - frontend/
   - src/
-    - pages/
-      - ServiceSelector.jsx  (landing / choix de service)
-      - CvPage.jsx           (page principale module CV : upload, recherche, chat)
-      - FacturePage.jsx      (placeholder module factures)
+    - app/
+      - page.tsx             (entrée de l'application)
+      - layout.tsx           (layout global, metadata, polices)
+      - landing-page/         (page d'accueil)
+      - dashboard/            (tableau de bord et widgets)
+      - sign-up-login-screen/ (authentification)
+      - workspace/            (espaces métier)
     - components/
-      - Header.jsx
-      - DossierCard.jsx
-      - Logo.jsx
-    - api/
-      - cvApi.js             (uploadCv, listerCandidats, rechercherCritere, envoyerMessageChat, resetChat)
-    - index.css             (design tokens, thème)
+      - ui/                   (composants partagés)
+    - styles/
+      - tailwind.css          (styles globaux / thème)
 - backend/
   - main.py                 (FastAPI app, points d'entrée HTTP)
   - requirements.txt        (dépendances Python)
@@ -113,8 +114,8 @@ Comment démarrer (dev)
 Notes de développement
 ----------------------
 - Ne pas modifier les tokens du design system dans `src/index.css` sans accord — le visual doit rester cohérent.
-- Le composant `CvPage.jsx` contient la logique métier (upload, recherche, chat). Les modifications visuelles sont tolérées si la logique d'appel reste inchangée.
-- Header : contient désormais un mini-nav pour sélectionner rapidement le module (CV/Factures) ; la navigation est gérée par `App.jsx` via `useState` (pas de react-router pour l'instant).
+- Les pages métier côté frontend sont organisées dans `src/app` : garder la logique d'affichage et de navigation cohérente avec les routes Next.js existantes.
+- Les modules CV et Factures doivent rester séparés dans l'interface, avec une navigation simple et cohérente au niveau du layout ou des pages.
 - Tests : aucun test automatisé présent — prévoir d'ajouter des tests unitaires pour `core` et des tests d'intégration pour les endpoints API.
 
 Sécurité & confidentialité

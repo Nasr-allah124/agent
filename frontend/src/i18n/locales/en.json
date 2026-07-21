@@ -1,0 +1,513 @@
+{
+    "brand": "Daisy Consulting Agents",
+    "nav": {
+        "features": "Features",
+        "services": "Services",
+        "how": "How It Works",
+        "resources": "Resources",
+        "demo": "Demo",
+        "about": "About"
+    },
+    "Login": "Login",
+    "start": "Get Started",
+    "hero": {
+        "badgeAi": "AI",
+        "badgeText": "Powered Document Intelligence Platform",
+        "titleLine1": "Understand Your",
+        "titleDocuments": "Documents",
+        "titleWith": "with",
+        "titlePoweredByAi": "Powered by AI.",
+        "words": {
+            "analyze": "Analyze.",
+            "understand": "Understand.",
+            "discover": "Discover.",
+            "automate": "Automate.",
+            "explore": "Explore."
+        },
+        "description1": "Upload any business document — CVs, invoices, PDFs, Word, Excel — and let",
+        "description2": "extract insights, answer questions and transform your workflow.",
+        "check1": "Experience AI-powered document analysis instantly.",
+        "check2": "Trusted by professionals. Designed for productivity.",
+        "stat1Value": "Faster",
+        "stat1Label": "Document Processing",
+        "stat2Value": "Smart",
+        "stat2Label": "AI Analysis",
+        "stat3Value": "Accurate",
+        "stat3Label": "Insights"
+    },
+    "dashboard": {
+        "uploadedDocs": "Uploaded Documents",
+        "live": "Live",
+        "aiAccuracy": "AI Accuracy",
+        "reliable": "Reliable",
+        "docsCount": "12 Docs",
+        "uploaded": "Uploaded",
+        "aiProcessing": "AI Processing",
+        "parsing": "Parsing",
+        "analyzing": "Analyzing",
+        "insights": "Insights",
+        "aiAssistant": "AI Assistant",
+        "question": "What are the total unpaid invoices?",
+        "answer": "Found 3 unpaid invoices totaling $12,450. Oldest: 45 days overdue.",
+        "docs": {
+            "cv": {
+                "name": "Resume_Sarah.pdf",
+                "type": "CV"
+            },
+            "invoice": {
+                "name": "Invoice_2025_Q4.pdf",
+                "type": "Invoice"
+            },
+            "excel": {
+                "name": "Sales_Report.xlsx",
+                "type": "Excel"
+            },
+            "word": {
+                "name": "Contract_NDA.docx",
+                "type": "Word"
+            }
+        }
+    },
+    "services": {
+        "badge": "AI Services",
+        "titleLine1": "Choose Your",
+        "titleHighlight": "AI Service",
+        "subtitle1": "Each service is a specialized",
+        "subtitleHighlight": "AI workspace",
+        "subtitle2": "designed for a specific document type. Select the one that fits your workflow.",
+        "formatsLabel": "Supported Formats",
+        "openService": "Open Service",
+        "items": {
+            "resume": {
+                "badge": "HR & Recruitment",
+                "title": "AI Resume Analysis",
+                "subtitle": "Intelligent CV & Candidate Intelligence",
+                "description": "Analyze resumes intelligently, extract skills, education, experience, certifications and languages. Generate summaries, compare candidates and answer questions about uploaded resumes.",
+                "features": {
+                    "0": "Skills & experience extraction",
+                    "1": "Candidate scoring",
+                    "2": "AI summaries",
+                    "3": "Natural language Q&A",
+                    "4": "Candidate comparison"
+                }
+            },
+            "invoice": {
+                "badge": "Finance & Accounting",
+                "title": "AI Invoice Analysis",
+                "subtitle": "Intelligent Financial Document Processing",
+                "description": "Analyze invoices automatically, extract suppliers, products, taxes, totals and payment status. Detect anomalies, generate summaries and answer questions about uploaded invoices.",
+                "features": {
+                    "0": "Extract totals & taxes",
+                    "1": "Supplier & product data",
+                    "2": "Payment status tracking",
+                    "3": "Anomaly detection",
+                    "4": "Financial summaries"
+                }
+            }
+        }
+    },
+    
+  "features": {
+    "badge": "Features",
+    "titleLine1": "Built for",
+    "titleHighlight": "your productivity",
+    "subtitle": "A complete platform to analyze your resumes and invoices, powered by AI at every step.",
+    "items": {
+      "search": {
+        "title": "Semantic search",
+        "description": "Instantly find information in your documents through intelligent vector search, not just keywords."
+      },
+      "security": {
+        "title": "Secure data",
+        "description": "Your documents and data stay protected, with encrypted storage and controlled access at all times."
+      },
+      "formats": {
+        "title": "Multi-format support",
+        "description": "Upload your resumes and invoices in PDF, Word, Excel or CSV — the platform adapts to your document's format."
+      },
+      "chat": {
+        "title": "Natural language questions",
+        "description": "Ask your documents questions directly, as if you were talking to an expert colleague."
+      },
+      "speed": {
+        "title": "Fast processing",
+        "description": "Analyze dozens of documents in seconds, thanks to AI models optimized for performance."
+      },
+      "history": {
+        "title": "Conversation history",
+        "description": "Find all your past analyses and pick up a conversation right where you left it."
+      }
+    }
+  },
+  
+  "howItWorks": {
+    "badge": "How It Works",
+    "titleLine1": "A simple,",
+    "titleHighlight": "intelligent process",
+    "subtitle": "From uploading your document to chatting with the AI, here's how our platform turns your resumes and invoices into actionable insights.",
+    "stepLabel": "Step",
+    "steps": {
+      "upload": {
+        "title": "Upload the document",
+        "description": "Drop your resume or invoice in PDF, Word, Excel or CSV format directly into the platform."
+      },
+      "vectorize": {
+        "title": "Extraction & vectorization",
+        "description": "Content is extracted and converted into vectors, stored in a vector database for intelligent search."
+      },
+      "analyze": {
+        "title": "AI agent analysis",
+        "description": "Our AI agent analyzes the document: skills and experience for a resume, amounts and taxes for an invoice."
+      },
+      "chat": {
+        "title": "Results & conversation",
+        "description": "Get a structured summary and ask questions in natural language, with your conversation history saved."
+      }
+    }
+  },
+  "faq": {
+    "titleLine1": "Frequently Asked",
+    "titleHighlight": "Questions",
+    "subtitle1": "Everything you need to know about",
+    "subtitleHighlight": "Daisy Consulting Agents",
+    "items": {
+      "formats": {
+        "q": "What document formats are supported?",
+        "a": "The platform accepts PDF, Word (.docx), Excel (.xlsx), CSV and image files (PNG, JPG). You can upload a resume or invoice individually, or several documents at once."
+      },
+      "documentTypes": {
+        "q": "What types of documents can I analyze?",
+        "a": "Two specialized agents are available: the Resume agent, to analyze and compare applications, and the Invoice agent, to extract amounts, taxes and payment status from financial documents."
+      },
+      "privacy": {
+        "q": "Is my data secure and private?",
+        "a": "Yes. Your documents are stored securely and are never shared with third parties. You retain full control over your data at all times."
+      },
+      "chat": {
+        "q": "How does the AI document chat work?",
+        "a": "Once your document is uploaded, you can ask questions in plain language. The AI agent reads and understands the content through vector search, then answers contextually: summaries, specific data extraction, or comparisons."
+      },
+      "compare": {
+        "q": "Can I compare multiple documents?",
+        "a": "Yes. You can compare several resumes to evaluate candidates, or several invoices to spot anomalies. The AI highlights differences and similarities."
+      },
+      "accuracy": {
+        "q": "How accurate is the AI extraction?",
+        "a": "The platform relies on Gemini models paired with a ChromaDB vector database, ensuring reliable extraction of skills, amounts and key information. You can always review extracted data in the results."
+      },
+      "export": {
+        "q": "Can I export the analysis results?",
+        "a": "Yes. AI summaries and extracted data can be exported, and your full conversation and analysis history remains accessible at any time."
+      }
+    }
+  },
+  
+  "about": {
+    "badge": "About",
+    "titleLine1": "A platform born from",
+    "titleHighlight": "Daisy Consulting's expertise",
+    "paragraph1": "Daisy Consulting Agents was born from a simple observation: sorting resumes or processing invoices by hand takes valuable time — time that should go into decisions, not data entry.",
+    "paragraph2": "We built two",
+    "paragraph2Highlight": "specialized, autonomous agents",
+    "paragraph3": "that read, understand and answer your questions about your documents, just like an experienced colleague would.",
+    "stats": {
+      "agents": { "value": "2 agents", "label": "Resumes & Invoices" },
+      "formats": { "value": "4 formats", "label": "PDF, Word, Excel, CSV" },
+      "accuracy": { "value": "Cutting-edge AI", "label": "Gemini models" },
+      "focus": { "value": "100% focused", "label": "HR & Finance" }
+    }
+  
+},
+
+  
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "noAccount": "Don't have an account?",
+      "createOne": "Create one free",
+      "continueGoogle": "Continue with Google",
+      "continueMicrosoft": "Continue with Microsoft",
+      "orContinueWithEmail": "or continue with email",
+      "emailLabel": "Work Email",
+      "emailPlaceholder": "you@company.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Remember me for 30 days",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Min 6 characters",
+        "genericError": "Something went wrong, please try again."
+      }
+    },
+    "signup": {
+      "title": "Create your account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "google": "Google",
+      "microsoft": "Microsoft",
+      "linkedin": "LinkedIn",
+      "orWithEmail": "or with email",
+      "firstNameLabel": "First name",
+      "firstNamePlaceholder": "John",
+      "lastNameLabel": "Last name",
+      "lastNamePlaceholder": "Doe",
+      "emailLabel": "Work Email",
+      "emailPlaceholder": "you@company.com",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Your company name",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select your role",
+      "roles": {
+        "hrManager": "HR Manager",
+        "talentAcquisition": "Talent Acquisition",
+        "recruiter": "Recruiter",
+        "hrDirector": "HR Director",
+        "founder": "Founder",
+        "other": "Other"
+      },
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "agreeTerms": "I agree to the",
+      "termsOfService": "terms of service",
+      "and": "and the",
+      "privacyPolicy": "privacy policy",
+      "submitting": "Creating account...",
+      "submit": "Create account",
+      "successTitle": "Account created successfully!",
+      "successSubtitle": "You can now sign in with your credentials.",
+      "goToSignIn": "Go to sign in",
+      "errors": {
+        "required": "This field is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email",
+        "companyRequired": "Company is required",
+        "roleRequired": "Select your role",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Min 8 characters",
+        "confirmRequired": "Confirm your password",
+        "passwordsMismatch": "Passwords don't match",
+        "termsRequired": "You must accept the terms",
+        "genericError": "Something went wrong, please try again."
+      }
+    },
+    "illustration": {
+      "stats": {
+        "matchScore": "AI Accuracy",
+        "cvsAnalyzed": "Agents available",
+        "companies": "Supported formats",
+        "fasterHiring": "Faster"
+      },
+      "loginTitle": "Welcome back.",
+      "loginSubtitle": "Your AI agents for resumes and invoices are waiting.",
+      "signupTitle": "Join Daisy Consulting Agents.",
+      "signupSubtitle": "Create your account and automate your resume and invoice analysis.",
+      "quote": "Daisy Consulting Agents cut our resume screening and invoice processing time in half.",
+      "quoteAuthor": "— Daisy Consulting Team"
+    }
+  },
+   "verifyEmail": {
+    "title": "Verify your email",
+    "subtitle": "A 6-digit code was sent to",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "resendCode": "Resend code",
+    "resending": "Sending...",
+    "incompleteCode": "Please enter all 6 digits.",
+    "genericError": "Something went wrong.",
+    "successTitle": "Email verified!",
+    "successSubtitle": "Your account is now active.",
+    "goToLogin": "Sign in"
+  },
+  
+  "Dashboard": {
+    "logout": "Logout",
+    "welcome": "Hi {{name}}, welcome back.",
+    "chooseAgent": "Which agent would you like to use today?",
+    "openAgent": "Open agent",
+    "agents": {
+    "resume": {
+      "badge": "AI Assistant",
+      "title": "Resume Analysis",
+      "subtitle": "Optimize your resume",
+      "description": "Analyze your resume with AI and receive personalized recommendations.",
+      "features": [
+        "ATS analysis",
+        "Smart suggestions",
+        "Skill detection",
+        "Resume score",
+        "PDF export"
+      ]
+    },
+    "invoice": {
+      "badge": "AI Assistant",
+      "title": "Invoice Analysis",
+      "subtitle": "Automatic extraction",
+      "description": "Upload your invoices and let AI extract and analyze the data.",
+      "features": [
+        "Smart OCR",
+        "Automatic extraction",
+        "Excel export",
+        "Error detection",
+        "Statistics"
+      ]
+    }
+  }
+  
+},
+
+  "Auth": {
+    "signup": {
+      "backToHome": "Back to Home"
+    }
+  
+},
+
+  "common": {
+    "language": "Language",
+    "toggleTheme": "Toggle theme"
+  },
+  "invoiceWorkspace": {
+    "back": "Back",
+    "headerTitle": "AI Invoice Assistant",
+    "headerSubtitle": "Automated invoice analysis and tracking",
+    "aiActive": "AI active",
+    "signIn": "Sign in",
+    "uploadedInvoices": "Uploaded invoices",
+    "files": "files",
+    "filtersTitle": "Filters",
+    "filters": {
+      "all": "All",
+      "unpaid": "Unpaid",
+      "overdue": "Overdue",
+      "anomalies": "Anomalies",
+      "paid": "Paid"
+    },
+    "chatTitle": "AI Assistant",
+    "chatSubtitle": "invoices analyzed",
+    "export": "Export",
+    "customChartTitle": "Show/hide chart",
+    "aiInitialMessage": "Hi! I'm your AI assistant for invoice analysis. Ask me anything about your documents.",
+    "aiResponseMessage": "Here's what I found in your invoices. **Want more details?**",
+    "suggestedQuestions": "Suggested questions",
+    "questions": {
+      "totalUnpaid": "What's the total of unpaid invoices?",
+      "compareTwo": "Compare two invoices",
+      "showThisMonth": "Show this month's invoices",
+      "whichAnomalies": "Which anomalies were detected?",
+      "totalTax": "What's the total tax amount?",
+      "listOverdue": "List overdue invoices"
+    },
+    "inputPlaceholder": "Ask a question about your invoices...",
+    "analysisResultsTitle": "Analysis results",
+    "cashflowTitle": "Cashflow forecast",
+    "cashflowSubtitle": "Projected balance over the coming weeks",
+    "totalTTC": "Total Amount",
+    
+     "document": "Document",
+  "invoices": "Invoices",
+  "size": "Size",
+  "importedOn": "Imported on",
+  "actions": "Actions",
+  "type": "Type",
+    "cashflowAlert": "Negative balance projected",
+    "cashflowLegend": "Balance",
+    "libraryTitle": "Document library",
+    "searchDocuments": "Search documents...",
+    "stats": {
+      "totalAmount": "Total amount",
+      "unpaid": "Unpaid",
+      "anomalies": "Anomalies",
+      "processed": "Processed",
+      "registeredInvoices": "Registered invoices",
+      "importedFiles": "Imported files"
+    }
+  },
+  "resumeWorkspace": {
+    "back": "Back",
+    "graphiquesEpingles": "Pinned charts",
+    "headerTitle": "AI Resume Assistant",
+    "headerSubtitle": "Candidate analysis and search",
+    "aiActive": "AI active",
+    "signIn": "Sign in",
+    "candidate": "Candidate",
+    "loading": "Loading...",
+    "noImportedCV": "No CV imported.",
+    "type": "Type",
+    "size": "Size",
+    "importedOn": "Imported on",
+    "documents": "documents",
+    "noCandidate": "—",
+    "uploadTitle": "Drop your resumes here",
+    "uploadSubtitle": "PDF, DOCX up to 10 MB",
+    "browseFiles": "Browse files",
+    "uploadedResumes": "Uploaded resumes",
+    "files": "files",
+    "filtersTitle": "Filters",
+    "filters": {
+      "all": "All",
+      "analyzed": "Analyzed",
+      "processing": "Processing",
+      "starred": "Starred"
+    },
+    "chatTitle": "Recruitment Assistant",
+    "chatSubtitle": "candidates available",
+    "skillSearchTitle": "Skill Search",
+    "skillSearchPlaceholder": "Search a skill (e.g. React, Python)...",
+    "skillSearchEmptyTitle": "Search by skill",
+    "skillSearchEmptySubtitle": "Quickly find candidates who master a specific technology.",
+    "skillSearchNoResultsTitle": "No results",
+    "skillSearchNoResults": "No candidate matches",
+    "skillSearchResultsCount": "candidate(s) found for",
+    "export": "Export",
+    "suggestedQuestions": "Suggested questions",
+    "inputPlaceholder": "Ask a question about the candidates...",
+    "analysisResultsTitle": "Analysis Results",
+    "stats": {
+      "analyzed": "Analyzed CVs",
+      "avgScore": "Average score",
+      "topMatch": "Top match"
+    },
+    "trendTitle": "Top Candidates Trend",
+    "trendSubtitle": "Evolution over the last 6 weeks",
+    "trendLegend": "Top candidates"
+  },
+  "forgotPassword": {
+  "title": "Forgot password",
+  "subtitle": "Enter your email and we'll send you a reset code.",
+  "emailLabel": "Email address",
+  "send": "Send code",
+  "sending": "Sending…",
+  "backToLogin": "Back to login",
+  "sentTitle": "Email sent",
+  "sentSubtitle": "If an account exists with this email, you'll receive a reset code.",
+  "enterCode": "Enter code"
+},
+"resetPassword": {
+  "title": "Reset password",
+  "subtitle": "A code was sent to",
+  "newPasswordLabel": "New password",
+  "passwordTooShort": "Password must be at least 8 characters long.",
+  "reset": "Reset password",
+  "resetting": "Resetting…",
+  "successTitle": "Password reset",
+  "successSubtitle": "You can now log in with your new password.",
+  "goToLogin": "Go to login"
+}
+}
+
+
+
+
+  
+ 
+
+
+
+

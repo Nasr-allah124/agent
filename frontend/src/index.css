@@ -1,42 +1,129 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-ledger: #0F2A44;
-  --color-ledgerline: #1C3F5E;
-  --color-parchment: #F3EAD3;
-  --color-parchmentline: #D9CBA3;
-  --color-ink: #1B2430;
-  --color-brass: #C9A227;
-  --color-stamp: #B23A2E;
-  --color-moss: #5C7188;
-
-  --font-display: "Fraunces", serif;
-  --font-body: "Inter", sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+  --color-primary: #7c5cff;
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+    --color-input: var(--input);
+  --color-danger: #ef4444;
 }
 
-/* body {
-  font-family: var(--font-body);
+:root {
+  --foreground: #16121f;
+  --muted-foreground: #5b5568;
+  --border: rgba(0, 0, 0, 0.08);
+  --bg-body: #f5f3ff;
+  --bg-glass: rgba(245, 243, 255, 0.7);
+  --muted: rgba(0, 0, 0, 0.04);
+  --input: #ffffff;
+  --secondary: #8b5cf6;
+  
+  
 }
-@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
-@theme {
-  --color-ledger: #16241F;
-  --color-ledgerline: #2A3A32;
-  --color-parchment: #F3EAD3;
-  --color-parchmentline: #D9CBA3;
-  --color-ink: #211A12;
-  --color-brass: #C9A227;
-  --color-stamp: #B23A2E;
-  --color-moss: #6B7264;
-
-  --font-display: "Fraunces", serif;
-  --font-body: "Inter", sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+.dark {
+  --foreground: #f5f3ff;
+  --muted-foreground: #a3a0b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --bg-body: #0a0a12;
+  --bg-glass: rgba(10, 10, 18, 0.7);
+  --muted: rgba(255, 255, 255, 0.06);
+  --input: rgba(255, 255, 255, 0.05);
 }
 
 body {
-  font-family: var(--font-body);
-} */
+  background-color: var(--bg-body);
+  color: var(--color-foreground);
+  transition: background-color 0.3s, color 0.3s;
+}
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 90px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+}
+
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+}
+
+.shadow-glass {
+  box-shadow: 0 1px 0 var(--color-border);
+}
+
+.shadow-glow-purple {
+  box-shadow: 0 0 20px rgba(124, 92, 255, 0.4);
+}
+
+.bg-purple-soft {
+  background-color: rgba(124, 92, 255, 0.1);
+}
+@theme {
+  --color-primary: #7c5cff;
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-background: var(--bg-body);
+}
+@theme {
+  --font-size-hero: 3.5rem;
+  --color-success: #22c55e;
+  --color-muted: var(--muted);
+}
+
+.text-hero {
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+
+@media (min-width: 1024px) {
+  .text-hero {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .text-hero {
+    font-size: 4rem;
+  }
+}
+
+.keyword-gradient {
+  background: linear-gradient(135deg, #7c5cff, #4f8cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-section {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 1024px) {
+  .text-section {
+    font-size: 2.75rem;
+  }
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+}

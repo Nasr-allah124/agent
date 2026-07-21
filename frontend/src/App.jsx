@@ -1,22 +1,51 @@
-import { useState, useEffect } from "react";
-import ServiceSelector from "./pages/ServiceSelector";
-import CvPage from "./pages/CvPage";
-import FacturePage from "./pages/FacturePage";
+import { Routes, Route } from "react-router-dom";
 
+import Landing from "./pages/Landing";
+import AuthPage from "./pages/AuthPage";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProtectedRoute from "./auth/components/ProtectedRoute";
+import InvoiceWorkspace from "./workspace/InvoiceWorkspace";
+import HomeRoute from "./lib/HomeRoute";
+import ResumeWorkspace from "./workspace/ResumeWorkspace";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 function App() {
-  const [serviceActif, setServiceActif] = useState(() => localStorage.getItem("service_actif") || null);
+  return (
+    <Routes>
+      <Route path="/" element={<HomeRoute />} />
 
-  useEffect(() => {
-    if (serviceActif) {
-      localStorage.setItem("service_actif", serviceActif);
-    } else {
-      localStorage.removeItem("service_actif");
-    }
-  }, [serviceActif]);
-
-  if (serviceActif === "cv") return <CvPage onRetour={() => setServiceActif(null)} />;
-  if (serviceActif === "facture") return <FacturePage onRetour={() => setServiceActif(null)} />;
-  return <ServiceSelector onSelect={setServiceActif} />;
+      <Route path="/connexion" element={<AuthPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
+      {/* <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      /> */}
+      <Route
+        path="/workspace/invoice"
+        element={
+          <ProtectedRoute>
+            <InvoiceWorkspace />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/workspace/resume"
+        element={
+          <ProtectedRoute>
+            <ResumeWorkspace />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+    </Routes>
+  );
 }
 
 export default App;

@@ -1,55 +1,37 @@
-const API_BASE = "http://localhost:8020";
+import { apiFetch } from "./http";
 
-export async function uploadCv(fichier) {
+export function uploaderCV(fichier) {
   const formData = new FormData();
   formData.append("fichier", fichier);
-
-  const response = await fetch(`${API_BASE}/cv/upload`, {
+  return apiFetch("/cv/upload", {
     method: "POST",
     body: formData,
+    isFormData: true,
+    messageErreur: "Erreur lors de l'upload du CV",
   });
-
-  if (!response.ok) {
-    const erreur = await response.json();
-    throw new Error(erreur.detail || "Erreur lors de l'upload");
-  }
-
-  return response.json();
 }
 
-export async function listerCandidats() {
-  const response = await fetch(`${API_BASE}/cv/candidats`);
-  if (!response.ok) throw new Error("Erreur lors de la récupération des candidats");
-  return response.json();
+export function listerCandidats() {
+  return apiFetch("/cv/candidats", {
+    messageErreur: "Erreur lors du chargement des candidats",
+  });
 }
 
-export async function rechercherCritere(question) {
-  const response = await fetch(`${API_BASE}/cv/rechercher`, {
+export function rechercherCV(question) {
+  return apiFetch("/cv/rechercher", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: { question },
+    messageErreur: "Erreur lors de la recherche de candidats",
   });
-  if (!response.ok) {
-    const erreur = await response.json();
-    throw new Error(erreur.detail || "Erreur lors de la recherche");
-  }
-  return response.json();
 }
-
-export async function envoyerMessageChat(question) {
-  const response = await fetch(`${API_BASE}/cv/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+export function listerDocumentsCV() {
+  return apiFetch("/cv/documents", {
+    messageErreur: "Erreur lors du chargement des documents",
   });
-  if (!response.ok) {
-    const erreur = await response.json();
-    throw new Error(erreur.detail || "Erreur lors du chat");
-  }
-  return response.json();
 }
-
-export async function resetChat() {
-  const response = await fetch(`${API_BASE}/cv/chat/reset`, { method: "POST" });
-  return response.json();
+export function supprimerDocumentCV(nomFichier) {
+  return apiFetch(`/cv/documents/${encodeURIComponent(nomFichier)}`, {
+    method: "DELETE",
+    messageErreur: "Erreur lors de la suppression du CV",
+  });
 }
