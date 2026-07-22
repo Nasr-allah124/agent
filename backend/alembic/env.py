@@ -5,8 +5,11 @@ from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from core.graphiques_models import GraphiqueEpingle  # noqa: F401
+from core.conversations_models import Conversation, Message  # noqa: F401
 
 from alembic import context
+from modules.factures.models import Facture  # noqa: F401 — nécessaire pour qu'Alembic détecte le modèle
 
 # Permet à Alembic de trouver tes modules (core/, modules/)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))

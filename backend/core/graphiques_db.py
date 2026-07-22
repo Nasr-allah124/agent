@@ -1,65 +1,39 @@
-import sqlite3
-import os
-import json
-from datetime import datetime, timezone
-
-CHEMIN_DB = os.path.join(os.path.dirname(__file__), "graphiques.db")
+from sqlalchemy.orm import Session
+from core.graphiques_models import GraphiqueEpingle
 
 
-def creer_table():
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS graphiques_epingles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT NOT NULL,
-            service TEXT NOT NULL,
-            titre TEXT NOT NULL,
-            donnees_json TEXT NOT NULL,
-            created_at TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+def epingler(db: Session, service: str, titre: str, graphique: dict, user_id: str) -> dict:
+    g = GraphiqueEpingle(user_id=user_id, service=service, titre=titre, donnees=graphique)
+    db.add(g)
+    db.commit()
+    db.refresh(g)
+    return _vers_dict(g)
 
 
-def epingler(service: str, titre: str, graphique: dict, user_id: str) -> dict:
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    maintenant = datetime.now(timezone.utc).isoformat()
-    cursor.execute(
-        "INSERT INTO graphiques_epingles (user_id, service, titre, donnees_json, created_at) VALUES (?, ?, ?, ?, ?)",
-        (user_id, service, titre, json.dumps(graphique), maintenant),
+def lister(db: Session, service: str, user_id: str) -> list[dict]:
+    graphiques = (
+        db.query(GraphiqueEpingle)
+        .filter(GraphiqueEpingle.service == service, GraphiqueEpingle.user_id == user_id)
+        .order_by(GraphiqueEpingle.created_at.desc())
+        .all()
     )
-    id_cree = cursor.lastrowid
-    conn.commit()
-    conn.close()
-    return {"id": id_cree, "service": service, "titre": titre, "graphique": graphique, "created_at": maintenant}
+    return [_vers_dict(g) for g in graphiques]
 
 
-def lister(service: str, user_id: str) -> list[dict]:
-    conn = sqlite3.connect(CHEMIN_DB)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, service, titre, donnees_json, created_at FROM graphiques_epingles WHERE service = ? AND user_id = ? ORDER BY created_at DESC",
-        (service, user_id),
-    )
-    lignes = cursor.fetchall()
-    conn.close()
-    resultat = []
-    for l in lignes:
-        d = dict(l)
-        d["graphique"] = json.loads(d.pop("donnees_json"))
-        resultat.append(d)
-    return resultat
+def supprimer(db: Session, graphique_id: str, user_id: str) -> bool:
+    g = db.query(GraphiqueEpingle).filter(GraphiqueEpingle.id == graphique_id, GraphiqueEpingle.user_id == user_id).first()
+    if not g:
+        return False
+    db.delete(g)
+    db.commit()
+    return True
 
 
-def supprimer(graphique_id: int, user_id: str) -> bool:
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM graphiques_epingles WHERE id = ? AND user_id = ?", (graphique_id, user_id))
-    conn.commit()
-    supprime = cursor.rowcount > 0
-    conn.close()
-    return supprime
+def _vers_dict(g: GraphiqueEpingle) -> dict:
+    return {
+        "id": str(g.id),
+        "service": g.service,
+        "titre": g.titre,
+        "graphique": g.donnees,
+        "created_at": g.created_at.isoformat() if g.created_at else None,
+    }

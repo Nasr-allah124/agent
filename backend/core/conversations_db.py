@@ -1,149 +1,85 @@
-import sqlite3
-import os
-import json
-from datetime import datetime, timezone
-
-CHEMIN_DB = os.path.join(os.path.dirname(__file__), "conversations.db")
+from sqlalchemy.orm import Session
+from core.conversations_models import Conversation, Message
 
 
-def creer_tables():
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS conversations (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT NOT NULL,
-            service TEXT NOT NULL,
-            titre TEXT NOT NULL DEFAULT 'Nouvelle conversation',
-            resume_memoire TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        )
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            conversation_id INTEGER NOT NULL,
-            role TEXT NOT NULL,
-            contenu TEXT NOT NULL,
-            graphique TEXT,
-            created_at TEXT NOT NULL,
-            FOREIGN KEY (conversation_id) REFERENCES conversations (id)
-        )
-    """)
-    conn.commit()
-    conn.close()
+def creer_conversation(db: Session, service: str, user_id: str) -> dict:
+    conv = Conversation(user_id=user_id, service=service)
+    db.add(conv)
+    db.commit()
+    db.refresh(conv)
+    return {"id": str(conv.id), "service": conv.service, "titre": conv.titre, "updated_at": conv.updated_at.isoformat()}
 
 
-def _maintenant():
-    return datetime.now(timezone.utc).isoformat()
-
-
-def creer_conversation(service: str, user_id: str) -> dict:
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    maintenant = _maintenant()
-    cursor.execute(
-        "INSERT INTO conversations (user_id, service, titre, resume_memoire, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (user_id, service, "Nouvelle conversation", "", maintenant, maintenant),
+def lister_conversations(db: Session, service: str, user_id: str) -> list[dict]:
+    conversations = (
+        db.query(Conversation)
+        .filter(Conversation.service == service, Conversation.user_id == user_id)
+        .order_by(Conversation.updated_at.desc())
+        .all()
     )
-    conversation_id = cursor.lastrowid
-    conn.commit()
-    conn.close()
-    return {"id": conversation_id, "service": service, "titre": "Nouvelle conversation", "updated_at": maintenant}
+    return [
+        {"id": str(c.id), "titre": c.titre, "updated_at": c.updated_at.isoformat()}
+        for c in conversations
+    ]
 
 
-def lister_conversations(service: str, user_id: str) -> list[dict]:
-    conn = sqlite3.connect(CHEMIN_DB)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, titre, updated_at FROM conversations WHERE service = ? AND user_id = ? ORDER BY updated_at DESC",
-        (service, user_id),
-    )
-    lignes = cursor.fetchall()
-    conn.close()
-    return [dict(l) for l in lignes]
-
-
-def obtenir_conversation(conversation_id: int, user_id: str) -> dict | None:
-    conn = sqlite3.connect(CHEMIN_DB)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM conversations WHERE id = ? AND user_id = ?", (conversation_id, user_id))
-    conv = cursor.fetchone()
+def obtenir_conversation(db: Session, conversation_id: str, user_id: str) -> dict | None:
+    conv = db.query(Conversation).filter(Conversation.id == conversation_id, Conversation.user_id == user_id).first()
     if conv is None:
-        conn.close()
         return None
-    cursor.execute(
-        "SELECT role, contenu, graphique, created_at FROM messages WHERE conversation_id = ? ORDER BY id ASC",
-        (conversation_id,),
-    )
-    messages = []
-    for m in cursor.fetchall():
-        d = dict(m)
-        d["graphique"] = json.loads(d["graphique"]) if d["graphique"] else None
-        messages.append(d)
-    conn.close()
-    conv_dict = dict(conv)
-    conv_dict["messages"] = messages
-    return conv_dict
+
+    messages = db.query(Message).filter(Message.conversation_id == conv.id).order_by(Message.created_at.asc()).all()
+
+    return {
+        "id": str(conv.id),
+        "service": conv.service,
+        "titre": conv.titre,
+        "resume_memoire": conv.resume_memoire,
+        "messages": [
+            {
+                "role": m.role,
+                "contenu": m.contenu,
+                "graphique": m.graphique,
+                "created_at": m.created_at.isoformat(),
+            }
+            for m in messages
+        ],
+    }
 
 
-def obtenir_resume(conversation_id: int, user_id: str) -> str:
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT resume_memoire FROM conversations WHERE id = ? AND user_id = ?",
-        (conversation_id, user_id),
-    )
-    ligne = cursor.fetchone()
-    conn.close()
-    return ligne[0] if ligne and ligne[0] else "Aucun échange précédent."
+def obtenir_resume(db: Session, conversation_id: str, user_id: str) -> str:
+    conv = db.query(Conversation).filter(Conversation.id == conversation_id, Conversation.user_id == user_id).first()
+    if conv is None or not conv.resume_memoire:
+        return "Aucun échange précédent."
+    return conv.resume_memoire
 
 
-def ajouter_message(conversation_id: int, role: str, contenu: str, graphique: dict | None = None):
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO messages (conversation_id, role, contenu, graphique, created_at) VALUES (?, ?, ?, ?, ?)",
-        (conversation_id, role, contenu, json.dumps(graphique) if graphique else None, _maintenant()),
-    )
-    conn.commit()
-    conn.close()
+def ajouter_message(db: Session, conversation_id: str, role: str, contenu: str, graphique: dict | None = None):
+    message = Message(conversation_id=conversation_id, role=role, contenu=contenu, graphique=graphique)
+    db.add(message)
+    db.commit()
 
 
-def mettre_a_jour_resume(conversation_id: int, nouveau_resume: str):
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE conversations SET resume_memoire = ?, updated_at = ? WHERE id = ?",
-        (nouveau_resume, _maintenant(), conversation_id),
-    )
-    conn.commit()
-    conn.close()
+def mettre_a_jour_resume(db: Session, conversation_id: str, nouveau_resume: str):
+    db.query(Conversation).filter(Conversation.id == conversation_id).update({"resume_memoire": nouveau_resume})
+    db.commit()
 
 
-def renommer_conversation_si_premier_message(conversation_id: int, premier_message: str):
+def renommer_conversation_si_premier_message(db: Session, conversation_id: str, premier_message: str):
     titre = premier_message.strip()[:48]
     if len(premier_message.strip()) > 48:
         titre += "…"
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE conversations SET titre = ? WHERE id = ? AND titre = 'Nouvelle conversation'",
-        (titre, conversation_id),
-    )
-    conn.commit()
-    conn.close()
+    db.query(Conversation).filter(
+        Conversation.id == conversation_id,
+        Conversation.titre == "Nouvelle conversation",
+    ).update({"titre": titre})
+    db.commit()
 
 
-def supprimer_conversation(conversation_id: int, user_id: str) -> bool:
-    conn = sqlite3.connect(CHEMIN_DB)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM messages WHERE conversation_id = ?", (conversation_id,))
-    cursor.execute("DELETE FROM conversations WHERE id = ? AND user_id = ?", (conversation_id, user_id))
-    conn.commit()
-    supprimee = cursor.rowcount > 0
-    conn.close()
-    return supprimee
+def supprimer_conversation(db: Session, conversation_id: str, user_id: str) -> bool:
+    conv = db.query(Conversation).filter(Conversation.id == conversation_id, Conversation.user_id == user_id).first()
+    if not conv:
+        return False
+    db.delete(conv)  # cascade="all, delete-orphan" supprime aussi tous les Message associés automatiquement
+    db.commit()
+    return True

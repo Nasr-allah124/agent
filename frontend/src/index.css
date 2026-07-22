@@ -32,6 +32,27 @@
   --bg-glass: rgba(10, 10, 18, 0.7);
   --muted: rgba(255, 255, 255, 0.06);
   --input: rgba(255, 255, 255, 0.05);
+  
+}
+/* Recharts Tooltip */
+.recharts-default-tooltip {
+  background-color: var(--bg-body) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--foreground) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.recharts-tooltip-cursor {
+  fill: var(--secondary) !important;
+  fill-opacity: 0.12 !important;
+}
+
+.recharts-default-tooltip * {
+  color: var(--foreground) !important;
+}
+
+.recharts-tooltip-label {
+  font-weight: 600;
 }
 
 body {

@@ -1,16 +1,14 @@
-import sqlite3
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, field_validator
 
 from core.llm import get_model, get_model_structure
-from modules.factures.db import CHEMIN_DB
 from modules.factures.schemas import SpecificationGraphique
-
-
 
 
 SCHEMA_TABLE = """
 Table 'factures' :
-- id (INTEGER)
+- id (UUID)
 - numero (TEXT)
 - client_nom (TEXT)
 - client_email (TEXT)
@@ -18,7 +16,7 @@ Table 'factures' :
 - taux_tva (REAL)
 - montant_ttc (REAL)
 - description (TEXT)
-- date_facture (TEXT, format 'AAAA-MM-JJ')
+- date_facture (DATE, format 'AAAA-MM-JJ')
 """
 
 
@@ -36,7 +34,7 @@ class RequeteSQL(BaseModel):
         v_nettoye = v.strip().rstrip(";")
         if not v_nettoye.lower().startswith("select"):
             raise ValueError("Seules les requêtes SELECT sont autorisées")
-        mots_interdits = ["drop", "delete", "update", "insert", "alter", "attach", "pragma"]
+        mots_interdits = ["drop", "delete", "update", "insert", "alter", "attach", "pragma", "grant", "revoke"]
         if any(mot in v_nettoye.lower() for mot in mots_interdits):
             raise ValueError("Requête contient une opération non autorisée")
         return v_nettoye
@@ -62,16 +60,20 @@ def generer_requete(question: str, historique: str = "") -> RequeteSQL | None:
         return None
 
 
-def executer_requete(requete_sql: str, user_id: str) -> list[dict]:
-    """Exécute une requête déjà validée comme SELECT-only, strictement isolée par utilisateur."""
-    requete_isolee = f"WITH factures AS (SELECT * FROM main.factures WHERE user_id = ?) {requete_sql}"
-    conn = sqlite3.connect(CHEMIN_DB)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute(requete_isolee, (user_id,))
-    lignes = cursor.fetchall()
-    conn.close()
-    return [dict(ligne) for ligne in lignes]
+def executer_requete(db: Session, requete_sql: str, user_id: str) -> list[dict]:
+    """Exécute une requête déjà validée comme SELECT-only, strictement isolée par utilisateur.
+
+    Le CTE masque la vraie table 'factures' par une version déjà filtrée sur user_id,
+    donc même si le LLM écrit 'SELECT * FROM factures', il ne voit jamais que ses propres lignes.
+    'public.' est nécessaire (comme 'main.' l'était pour SQLite) pour éviter que Postgres
+    confonde le nom du CTE avec la vraie table lors de sa propre définition.
+    """
+    requete_isolee = (
+        f"WITH factures AS (SELECT * FROM public.factures WHERE user_id = :user_id) {requete_sql}"
+    )
+    resultat = db.execute(text(requete_isolee), {"user_id": user_id})
+    lignes = [dict(row) for row in resultat.mappings().all()]
+    return lignes
 
 
 def reformuler_reponse(question: str, resultats: list[dict]) -> str:
@@ -85,7 +87,6 @@ def reformuler_reponse(question: str, resultats: list[dict]) -> str:
     )
     reponse = model.invoke(prompt)
 
-    # Gère les deux formats possibles : string directe ou liste de blocs
     if isinstance(reponse.content, str):
         return reponse.content
     elif isinstance(reponse.content, list):
@@ -94,7 +95,7 @@ def reformuler_reponse(question: str, resultats: list[dict]) -> str:
     return str(reponse.content)
 
 
-def poser_question(question: str, user_id: str, historique: str = "") -> dict:
+def poser_question(db: Session, question: str, user_id: str, historique: str = "") -> dict:
     requete = generer_requete(question, historique)
     if requete is None:
         return {
@@ -109,13 +110,13 @@ def poser_question(question: str, user_id: str, historique: str = "") -> dict:
         }
 
     try:
-        resultats = executer_requete(requete.requete_select, user_id)
-    except sqlite3.Error:
+        resultats = executer_requete(db, requete.requete_select, user_id)
+    except Exception:
+        db.rollback()
         return {
             "succes": True,
             "reponse": (
-                "Je n'ai pas cette information disponible dans les données actuelles de vos factures "
-                "(par exemple, le statut de paiement n'est pas encore suivi dans le système). "
+                "Je n'ai pas cette information disponible dans les données actuelles de vos factures. "
                 "Voulez-vous que je vous montre plutôt le total, ou la liste par client ?"
             ),
             "requete_utilisee": requete.requete_select,
@@ -144,7 +145,11 @@ def poser_question(question: str, user_id: str, historique: str = "") -> dict:
         "resultats_bruts": resultats,
         "graphique": graphique,
     }
+
+
 model_graphique = get_model_structure(SpecificationGraphique)
+
+
 def generer_specification_graphique(question: str, resultats: list[dict]) -> SpecificationGraphique | None:
     if not resultats:
         return None
@@ -165,6 +170,8 @@ def generer_specification_graphique(question: str, resultats: list[dict]) -> Spe
     except Exception as e:
         print(f"Erreur génération graphique : {e}")
         return None
+
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from tenacity import retry, stop_after_attempt, wait_exponential

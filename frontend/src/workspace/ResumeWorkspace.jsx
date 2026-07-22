@@ -18,6 +18,7 @@ import {
   GitCompare,
   X,
   History,
+  Globe,
   Square,
   CheckSquare,
   ChevronUp,
@@ -217,23 +218,23 @@ export default function ResumeWorkspace() {
 
   // --- Tendance réelle : nombre de CV importés par semaine ---
   const tendanceCumulative = useMemo(() => {
-  const avecDate = documentLibrary
-    .filter((d) => d.dateImportRaw)
-    .sort((a, b) => new Date(a.dateImportRaw) - new Date(b.dateImportRaw));
-  let cumul = 0;
-  return avecDate.map((d) => {
-    cumul += 1;
-    return {
-      date: new Date(d.dateImportRaw).toLocaleString(language, {
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      total: cumul,
-    };
-  });
-}, [documentLibrary, language]);
+    const avecDate = documentLibrary
+      .filter((d) => d.dateImportRaw)
+      .sort((a, b) => new Date(a.dateImportRaw) - new Date(b.dateImportRaw));
+    let cumul = 0;
+    return avecDate.map((d) => {
+      cumul += 1;
+      return {
+        date: new Date(d.dateImportRaw).toLocaleString(language, {
+          day: "2-digit",
+          month: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        total: cumul,
+      };
+    });
+  }, [documentLibrary, language]);
 
   // --- Tableau : recherche, tri, sélection ---
   const [librarySearch, setLibrarySearch] = useState("");
@@ -362,8 +363,17 @@ export default function ResumeWorkspace() {
     else if (liste.length > 0) await ouvrirConversation(liste[0].id);
     else await nouvelleConversation();
   }
+  async function nettoyerConversationViDeSiBesoin() {
+    if (conversationActive && messages.length === 0) {
+      await supprimerConversation(conversationActive);
+      setConversations((prev) =>
+        prev.filter((c) => c.id !== conversationActive),
+      );
+    }
+  }
 
   async function nouvelleConversation() {
+    await nettoyerConversationViDeSiBesoin();
     const conv = await creerConversation(SERVICE);
     setConversations((prev) => [
       { id: conv.id, titre: conv.titre, updated_at: conv.updated_at },
@@ -517,13 +527,22 @@ export default function ResumeWorkspace() {
             </div>
             <button
               onClick={toggleLanguage}
-              className="p-2 hover:bg-muted rounded-lg transition-colors flex items-center gap-1"
+              className="
+    flex items-center gap-2
+    px-3 py-2
+    rounded-lg
+    bg-card
+    border border-border
+    hover:bg-muted
+    transition-colors
+  "
               title={t("common.language")}
             >
-              <Languages size={16} className="text-muted-foreground" />
-              <span className="text-xs font-700 text-muted-foreground uppercase">
-                {language}
+              <Globe size={16} className="text-primary" />
+              <span className="text-sm font-medium text-foreground">
+                {i18n.language.toUpperCase()}
               </span>
+              <ChevronDown size={14} className="text-muted-foreground" />
             </button>
             <button
               onClick={toggleDark}

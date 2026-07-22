@@ -39,7 +39,7 @@ class FactureExtraite(BaseModel):
                 return datetime.strptime(v, fmt).strftime("%Y-%m-%d")
             except ValueError:
                 continue
-        return v
+        return None
 
 
 class MappingColonnes(BaseModel):

@@ -1,258 +1,227 @@
-# Logique complete du backend
+# Logique backend (mise a jour)
 
-Ce document explique comment le backend fonctionne, depuis le demarrage de l'API jusqu'aux traitements metier (authentification, CV, factures, conversations).
+Ce document decrit la logique backend actuellement en place, avec les evolutions recentes (auth complete avec refresh token, endpoints graphiques, isolation par utilisateur sur CV/factures/conversations).
 
-## 1) Vue d'ensemble
+## 1) Architecture generale
 
-Le backend est une API FastAPI monolithique avec 4 grandes briques :
-- Authentification et gestion utilisateurs (`/api/auth`)
-- Traitement CV et recherche RH (`/cv`)
-- Traitement factures et questions analytiques (`/factures`)
-- Moteur de conversations multi-services (`/conversations`)
+Le backend est une API FastAPI composee de 5 domaines exposes:
+- Authentification: `/api/auth`
+- CV et recherche RH: `/cv`
+- Factures et analyse: `/factures`
+- Conversations metier: `/conversations`
+- Graphiques epingles: `/graphiques`
 
-L'entree principale est `main.py` :
-- cree l'application FastAPI
-- active CORS pour le front local
-- branche les routeurs des modules
+Point d'entree: `main.py`
+- creation de l'app FastAPI
+- activation CORS pour front local
+- enregistrement des routeurs
 
-## 2) Point d'entree HTTP
+## 2) Routeurs montes
 
-Routes enregistrees dans `main.py` :
-- `cv_router` -> routes `/cv`
-- `factures_router` -> routes `/factures`
-- `conversations_router` -> routes `/conversations`
-- `auth_router` -> routes `/api/auth`
-- route de sante: `GET /` -> `{ "status": "API en ligne" }`
+Dans `main.py`, les routeurs suivants sont montes:
+- `cv_router`
+- `factures_router`
+- `conversations_router`
+- `graphiques_router`
+- `auth_router`
 
-## 3) Configuration et environnement
+Route de sante:
+- `GET /` -> `{ "status": "API en ligne" }`
 
-`core/config.py` charge `.env` et expose :
-- `DATABASE_URL` pour SQLAlchemy (PostgreSQL vise)
-- `SECRET_KEY`, durees de tokens
+## 3) Configuration et pre-requis
+
+`core/config.py` charge les variables d'environnement:
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `ACCESS_TOKEN_EXPIRE_MINUTES`
+- `REFRESH_TOKEN_EXPIRE_DAYS`
 - SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM`)
 - `FRONTEND_URL`
 
-`core/llm.py` lit aussi `GOOGLE_API_KEY` et leve une erreur au demarrage si absente.
+`core/llm.py` exige `GOOGLE_API_KEY` au demarrage.
 
-## 4) Couches de persistance
+## 4) Persistances utilisees
 
-Le backend utilise plusieurs stockages selon les besoins :
+Le backend est hybride:
 
-1. Base relationnelle (SQLAlchemy + Alembic)
-- `core/database.py` cree `engine`, `SessionLocal`, `Base`, et la dependance `get_db()`.
-- Modele principal actuel: `modules/auth/models.py` (table `users`).
-- Migration initiale: `alembic/versions/58eb8793d659_create_users_table.py`.
+1. SQLAlchemy + PostgreSQL (auth)
+- `core/database.py`
+- modeles: `User`, `RefreshToken` dans `modules/auth/models.py`
+- migrations Alembic (ex: creation users)
 
-2. SQLite local pour les conversations
+2. SQLite local conversations
 - `core/conversations_db.py`
-- Tables: `conversations`, `messages`
-- Sert de memoire persistante de chat (par service: `cv` ou `facture`).
+- tables: `conversations`, `messages`
+- `user_id` est stocke dans `conversations` pour isoler les donnees
 
-3. SQLite local pour les factures
+3. SQLite local factures
 - `modules/factures/db.py`
-- Table: `factures` (insertion, lecture, suppression).
+- table `factures` avec `user_id`
+- contrainte `UNIQUE(user_id, numero)`
 
-4. Chroma vector store pour les CV
+4. SQLite local graphiques
+- `core/graphiques_db.py`
+- table `graphiques_epingles` avec `user_id`
+
+5. ChromaDB (vector store CV)
 - `core/vector_store.py`
-- Collection `cv_collection_api`, persistance dans `./chroma_data_cv`.
+- collection `cv_collection_api`
+- metadonnees de chunks incluent `user_id` et infos fichier
 
-## 5) Securite et authentification
+## 5) Securite
 
-`core/security.py` fournit :
-- hash mot de passe via `bcrypt`
-- verification mot de passe
-- creation JWT access token (algo HS256)
-- decode JWT
-- dependency FastAPI `get_current_user_id` avec `HTTPBearer`
-- generation code de verification email (6 chiffres)
+`core/security.py` fournit:
+- hash/verify de mot de passe avec `bcrypt`
+- JWT access token (HS256)
+- middleware de dependance `get_current_user_id` via `HTTPBearer`
+- refresh token brut genere de facon aleatoire
+- hash SHA-256 des refresh tokens stockes en base
+- generation de code 6 chiffres pour verification/reinitialisation
 
-`core/email.py` envoie un email HTML de verification via SMTP + STARTTLS.
+`core/rate_limit.py` applique un rate-limit en memoire (process local) sur des routes sensibles.
 
 ## 6) Module Auth (`/api/auth`)
 
-Fichiers :
+Fichiers:
 - `modules/auth/routes.py`
 - `modules/auth/service.py`
 - `modules/auth/schemas.py`
 - `modules/auth/models.py`
 
-Flux principal :
-1. `POST /api/auth/signup`
-- verifie unicite email
-- hash le mot de passe
-- cree un code de verification (15 min)
-- enregistre l'utilisateur en base
-- envoie l'email de verification
+Endpoints:
+- `POST /api/auth/signup`
+- `POST /api/auth/verify-email`
+- `POST /api/auth/resend-code`
+- `POST /api/auth/login` -> renvoie `access_token` + `refresh_token`
+- `GET /api/auth/me`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
 
-2. `POST /api/auth/verify-email`
-- valide email + code + expiration
-- active `is_verified`
-
-3. `POST /api/auth/resend-code`
-- regenere un code et renvoie l'email
-
-4. `POST /api/auth/login`
-- verifie credentials
-- refuse si compte non verifie
-- renvoie un `access_token` JWT
-
-5. `GET /api/auth/me`
-- exige Bearer token
-- renvoie le profil utilisateur
+Logique importante:
+- verification email avant autorisation de login
+- oubli mot de passe: message neutre pour eviter l'enumeration de comptes
+- reset mot de passe: revoque toutes les sessions refresh actives
+- refresh token rotation: l'ancien token est revoque et un nouveau couple est emis
 
 ## 7) Module CV (`/cv`)
 
-Fichiers :
+Fichiers principaux:
 - `modules/cv/routes.py`
 - `modules/cv/chunking.py`
 - `modules/cv/scoring.py`
 - `core/retriever.py`
 - `core/vector_store.py`
-- `core/llm.py`
 
-### 7.1 Ingestion CV
-`POST /cv/upload` :
-- accepte un PDF
-- lit le texte via `PyPDFLoader`
-- demande au LLM de structurer en sections + nom candidat
-- transforme en chunks `Document`
-- ajoute les chunks dans Chroma
+Endpoints:
+- `POST /cv/upload` (PDF et DOCX)
+- `GET /cv/candidats`
+- `GET /cv/documents`
+- `DELETE /cv/documents/{nom_fichier}`
+- `POST /cv/rechercher`
 
-`GET /cv/candidats` :
-- lit les metadonnees Chroma
-- renvoie la liste unique des candidats
-
-### 7.2 Recherche et scoring
-`POST /cv/rechercher` :
-- recupere les passages les plus proches (retriever semantique)
-- envoie contexte + critere au LLM
-- recoit un JSON structure par candidat (score, correspondance, justification)
-- trie les candidats par score desc
-
-### 7.3 Chat contextuel CV
-Le module enregistre un gestionnaire dans le moteur de conversations :
-- `enregistrer_gestionnaire("cv", _gestionnaire_cv)`
-- ce gestionnaire utilise un RAG chain + resume de conversation
-- renvoie: reponse textuelle + resume mis a jour
+Logique:
+- upload -> extraction/segmentation LLM -> ajout chunks dans Chroma
+- chaque chunk est tagge avec `user_id`, `nom_fichier`, `taille_octets`, `date_import`
+- retrieval et scoring filtres par `user_id`
+- gestionnaire conversation enregistre sous le service `cv`
 
 ## 8) Module Factures (`/factures`)
 
-Fichiers :
+Fichiers principaux:
 - `modules/factures/routes.py`
 - `modules/factures/extraction.py`
 - `modules/factures/db.py`
 - `modules/factures/agent.py`
 - `modules/factures/schemas.py`
 
-### 8.1 Import et normalisation
-`POST /factures/upload` (multi-fichiers) :
-- accepte PDF/CSV/Excel
-- PDF: extraction LLM des champs de facture
-- CSV/Excel: detection des colonnes via LLM puis normalisation pandas
-- calcule `montant_ttc`
-- ajoute metadonnees d'import (`nom_fichier`, `taille_octets`, `date_import`)
-- sauvegarde en SQLite avec gestion des doublons (numero unique)
+Endpoints:
+- `POST /factures/upload`
+- `GET /factures/`
+- `DELETE /factures/{facture_id}`
+- `DELETE /factures/par-fichier/{nom_fichier}`
 
-`GET /factures/` :
-- liste toutes les factures stockees
+Logique:
+- import multi-fichiers PDF/CSV/Excel
+- extraction et normalisation via LLM + pandas
+- calcul TTC et stockage en SQLite avec isolation `user_id`
+- questions en langage naturel transformees en SQL `SELECT` uniquement
+- execution SQL isolee par utilisateur
+- reformulation textuelle et option de specification graphique
 
-`DELETE /factures/{facture_id}` :
-- supprime une facture par id
+## 9) Module Conversations (`/conversations`)
 
-`DELETE /factures/par-fichier/{nom_fichier}` :
-- supprime toutes les factures d'un fichier
-
-### 8.2 Questions analytiques sur factures
-Dans `modules/factures/agent.py` :
-- le LLM genere une requete SQL structuree via schema Pydantic (`RequeteSQL`)
-- validation stricte: `SELECT` uniquement, mots dangereux refuses
-- execution SQLite
-- reformulation en langage naturel
-- tentative de generation d'une specification graphique (`bar`, `line`, `pie`) si pertinent
-
-Le gestionnaire facture est branche dans le moteur de conversations :
-- `enregistrer_gestionnaire("facture", _gestionnaire_facture)`
-
-## 9) Moteur Conversations (`/conversations`)
-
-Fichiers :
+Fichiers:
 - `core/conversations.py`
 - `core/conversations_db.py`
 
-Objectif : offrir une interface unique de chat, independante du service.
+Role:
+- couche commune de chat pour les services `cv` et `facture`
+- registre de gestionnaires: `service -> fonction(question, resume, user_id)`
 
-Concept cle : registre de gestionnaires
-- Chaque domaine enregistre une fonction: `fonction(question, resume)`
-- Le routeur conversations appelle le bon gestionnaire selon `service`
+Endpoints:
+- `POST /conversations`
+- `GET /conversations?service=...`
+- `GET /conversations/{conversation_id}`
+- `DELETE /conversations/{conversation_id}`
+- `POST /conversations/{conversation_id}/message`
 
-Endpoints :
-- `POST /conversations` : cree une conversation (`service` requis)
-- `GET /conversations?service=...` : liste les conversations d'un service
-- `GET /conversations/{id}` : recupere conversation + messages
-- `DELETE /conversations/{id}` : supprime la conversation
-- `POST /conversations/{id}/message` :
-  - lit le resume memoire actuel
-  - appelle le gestionnaire (`cv` ou `facture`)
-  - enregistre message user + assistant
-  - met a jour le resume
-  - renomme automatiquement la conversation au 1er message
+Comportement:
+- toutes les operations sont bornees a l'utilisateur courant
+- persistance des messages + resume memoire
+- renommage automatique de la conversation au premier message
 
-## 10) Composants LLM et RAG
+## 10) Module Graphiques (`/graphiques`)
 
-`core/llm.py` fournit 3 objets caches :
-- chat model Gemini
-- embeddings document (`retrieval_document`)
-- embeddings query (`retrieval_query`)
+Fichiers:
+- `core/graphiques.py`
+- `core/graphiques_db.py`
 
-`core/retriever.py` :
-- calcule embedding de la question
-- fait `similarity_search_by_vector` dans Chroma
-- formate les chunks pour les prompts
+Endpoints:
+- `POST /graphiques`
+- `GET /graphiques?service=...`
+- `DELETE /graphiques/{graphique_id}`
 
-Prompts importants :
-- CV chunking (structuration sections)
-- CV scoring (JSON par candidat)
-- CV RAG conversationnel
-- Facture SQL generation structuree
-- Resume conversation (CV et factures)
+Role:
+- epingler/lister/supprimer des graphiques par service
+- isolation par `user_id`
 
-## 11) Dependances principales
+## 11) LLM, prompts et RAG
 
-D'apres `requirements.txt` :
-- API: `fastapi`, `uvicorn`
-- Validation: `pydantic`
-- LLM/RAG: `langchain`, `langchain-google-genai`, `langchain-community`, `langchain-chroma`, `chromadb`, `pypdf`, `tenacity`
-- Data: `sqlalchemy`, `psycopg2-binary`, `alembic`, `pandas`
-- Auth: `python-jose`, `passlib[bcrypt]` (le code utilise aussi directement `bcrypt`)
-- Utilitaires: `python-dotenv`, `python-multipart`
+`core/llm.py` expose:
+- modele de chat Gemini
+- embeddings document
+- embeddings query
+- sortie structuree Pydantic via `get_model_structure`
 
-## 12) Flux de bout en bout (resume)
+Utilisation:
+- CV: chunking, scoring, reponses RAG, resume d'historique
+- Factures: generation SQL structuree, reformulation, proposition de graphique
 
-### 12.1 Auth
-Front -> `/api/auth/signup` -> service auth -> DB users + SMTP -> verification -> login -> JWT -> endpoints proteges.
+## 12) Flux metiers de bout en bout
 
-### 12.2 CV
-Upload PDF -> chunking LLM -> stockage vectoriel Chroma -> recherche/scoring RAG -> reponse classee.
+1. Auth
+- Signup -> verification email -> login -> tokens -> endpoints proteges
+- refresh token pour renouveler la session
+- logout/revocation pour invalider la session
 
-### 12.3 Factures
-Upload PDF/CSV/Excel -> extraction/normalisation -> SQLite factures -> questions en langage naturel -> SQL SELECT gere par LLM -> reponse texte (+ graphique optionnel).
+2. CV
+- upload document -> chunks vectorises -> recherche et scoring -> chat contextualise via conversations
 
-### 12.4 Conversations
-Creation conversation (service) -> message utilisateur -> gestionnaire metier -> persistance des messages et du resume -> historique reutilisable pour les questions de suivi.
+3. Factures
+- upload/normalisation -> stockage facture -> questions analytiques SQL -> reponse + graphique eventuel
 
-## 13) Points d'attention techniques
+4. Conversations
+- creation d'une conversation par service -> echanges persistants -> resume memoire pour questions de suivi
 
-- `core/llm.py` impose `GOOGLE_API_KEY`; sans cle, l'API ne demarre pas.
-- `core/security.py` contient des imports dupliques (`jwt`, `SECRET_KEY`) sans impact fonctionnel mais a nettoyer.
-- `modules/factures/routes.py` appelle `creer_table()` a l'import; utile mais a surveiller en environnement multi-workers.
-- `core/graphiques.py` / `core/graphiques_db.py` existent mais ne sont pas branches dans `main.py` actuellement.
-- Le module auth est SQLAlchemy/PostgreSQL, alors que conversations et factures utilisent SQLite local: architecture hybride assumee mais a expliciter en production.
+## 13) Attention integration frontend
 
-## 14) Recommandation d'organisation future
+- Le frontend utilise `VITE_API_URL=http://localhost:8020`.
+- Certains composants frontend auth utilisent encore une URL API hardcodee (`http://localhost:8020`) au lieu d'unifier via variable d'environnement.
 
-Pour faire evoluer le backend proprement :
-- centraliser toutes les persistances dans une couche `repositories`
-- harmoniser les bases (tout PostgreSQL ou separation formalisee)
-- ajouter tests unitaires des services (`auth`, `factures.agent`, `cv.scoring`)
-- ajouter logging structure et tracing des appels LLM
-- ajouter gestion d'erreurs metier normalisee (codes et payloads homogenes)
+## 14) Points techniques a surveiller
+
+- Architecture de persistence mixte (PostgreSQL + SQLite + Chroma) a formaliser pour la prod.
+- Le rate limit actuel est en memoire locale (non partage entre workers).
+- Des imports dupliques subsistent dans `core/security.py` et `modules/auth/models.py` (dette technique legere).

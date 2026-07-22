@@ -20,7 +20,8 @@ export default function GraphiqueFacture({ graphique }) {
             </defs>
             <XAxis dataKey="categorie" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
             <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
-            <Tooltip />
+            <Tooltip
+             />
             <Line type="monotone" dataKey="valeur" stroke="url(#ligneDegradee)" strokeWidth={2} />
           </LineChart>
         ) : type === "pie" ? (

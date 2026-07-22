@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   Send,
   Bot,
+  Globe,
   FileText,
   CheckCircle,
   Search,
@@ -335,39 +336,39 @@ export default function InvoiceWorkspace() {
     else if (liste.length > 0) await ouvrirConversation(liste[0].id);
     else await nouvelleConversation();
   }
+  async function nettoyerConversationViDeSiBesoin() {
+  if (conversationActive && messages.length === 0) {
+    await supprimerConversation(conversationActive);
+    setConversations((prev) => prev.filter((c) => c.id !== conversationActive));
+  }
+}
 
   async function nouvelleConversation() {
-    const conv = await creerConversation(SERVICE);
-    setConversations((prev) => [
-      { id: conv.id, titre: conv.titre, updated_at: conv.updated_at },
-      ...prev,
-    ]);
-    setConversationActive(conv.id);
-    setMessages([]);
-    localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(conv.id));
-    setShowHistory(false);
-  }
+  await nettoyerConversationViDeSiBesoin();
+  const conv = await creerConversation(SERVICE);
+  setConversations((prev) => [{ id: conv.id, titre: conv.titre, updated_at: conv.updated_at }, ...prev]);
+  setConversationActive(conv.id);
+  setMessages([]);
+  localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(conv.id));
+  setShowHistory(false);
+}
 
   async function ouvrirConversation(id) {
-    setChargementConversation(true);
-    try {
-      const conv = await obtenirConversation(id);
-      setConversationActive(id);
-      setMessages(
-        conv.messages.map((m) => ({
-          id: `${m.role}-${m.created_at}`,
-          role: m.role,
-          text: m.contenu,
-          graphique: m.graphique,
-        })),
-      );
-      localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(id));
-    } catch (e) {
-      console.error(e);
-    }
-    setChargementConversation(false);
-    setShowHistory(false);
+  if (id !== conversationActive) {
+    await nettoyerConversationViDeSiBesoin();
   }
+  setChargementConversation(true);
+  try {
+    const conv = await obtenirConversation(id);
+    setConversationActive(id);
+    setMessages(conv.messages.map((m) => ({ id: `${m.role}-${m.created_at}`, role: m.role, text: m.contenu, graphique: m.graphique })));
+    localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(id));
+  } catch (e) {
+    console.error(e);
+  }
+  setChargementConversation(false);
+  setShowHistory(false);
+}
 
   function handleSupprimerConversation(id, e) {
     e.stopPropagation();
@@ -487,16 +488,25 @@ export default function InvoiceWorkspace() {
                 {t("invoiceWorkspace.aiActive")}
               </span>
             </div>
-            <button
-              onClick={toggleLanguage}
-              className="p-2 hover:bg-muted rounded-lg transition-colors flex items-center gap-1"
-              title={t("common.language")}
-            >
-              <Languages size={16} className="text-muted-foreground" />
-              <span className="text-xs font-700 text-muted-foreground uppercase">
-                {language}
-              </span>
-            </button>
+          <button
+  onClick={toggleLanguage}
+  className="
+    flex items-center gap-2
+    px-3 py-2
+    rounded-lg
+    bg-card
+    border border-border
+    hover:bg-muted
+    transition-colors
+  "
+  title={t("common.language")}
+>
+  <Globe size={16} className="text-primary" />
+  <span className="text-sm font-medium text-foreground">
+    {i18n.language.toUpperCase()}
+  </span>
+  <ChevronDown size={14} className="text-muted-foreground" />
+</button>
             <button
               onClick={toggleDark}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
