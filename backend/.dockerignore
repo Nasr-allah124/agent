@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.env
+chroma_data_cv/
+alembic/versions/__pycache__/

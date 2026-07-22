@@ -386,24 +386,21 @@ export default function ResumeWorkspace() {
   }
 
   async function ouvrirConversation(id) {
-    setChargementConversation(true);
-    try {
-      const conv = await obtenirConversation(id);
-      setConversationActive(id);
-      setMessages(
-        conv.messages.map((m) => ({
-          id: `${m.role}-${m.created_at}`,
-          role: m.role,
-          text: m.contenu,
-        })),
-      );
-      localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(id));
-    } catch (e) {
-      console.error(e);
-    }
-    setChargementConversation(false);
-    setShowHistory(false);
+  if (id !== conversationActive) {
+    await nettoyerConversationViDeSiBesoin();
   }
+  setChargementConversation(true);
+  try {
+    const conv = await obtenirConversation(id);
+    setConversationActive(id);
+    setMessages(conv.messages.map((m) => ({ id: `${m.role}-${m.created_at}`, role: m.role, text: m.contenu })));
+    localStorage.setItem(CLE_STOCKAGE_CONVERSATION, String(id));
+  } catch (e) {
+    console.error(e);
+  }
+  setChargementConversation(false);
+  setShowHistory(false);
+}
 
   function handleSupprimerConversation(id, e) {
     e.stopPropagation();
